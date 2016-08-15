@@ -1,0 +1,15 @@
+dsg_home_home_index:
+    path:     /
+    defaults: { _controller: DSGHomeBundle:Home:index }
+
+dsg_home_home_wait:
+    path:     /wait/{europeanaItemsSession_id}
+    defaults: { _controller: DSGHomeBundle:Home:wait }
+    requirements:
+        europeanaItemsSession_id: \d+
+
+dsg_home_home_result:
+    path:     /result/{europeanaItemsSession_id}
+    defaults: { _controller: DSGHomeBundle:Home:result }
+    requirements:
+        europeanaItemsSession_id: \d+

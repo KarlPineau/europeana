@@ -1,0 +1,27 @@
+{# src/DATA/AdministrationBundle/Resources/views/layout.html.twig #}
+ 
+{% extends "DSGLayoutBundle::layout.html.twig" %}
+
+{% block title %}
+    {{ parent() }}
+{% endblock %}
+
+{% block follow %}
+    <meta name="robots" content="index,follow" />
+{% endblock %}
+
+{% block h1 %}{% endblock %}
+
+{% block h1_extend %}{% endblock %}
+
+{% block breadcrumb %}
+    {{parent()}}
+{% endblock %}
+
+{% block content %}{% endblock %}
+
+{% block javascript %}
+    {{parent()}}
+    {% block javascript_sub %}
+    {% endblock %}
+{% endblock %}

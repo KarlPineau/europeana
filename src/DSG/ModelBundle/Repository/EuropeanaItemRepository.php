@@ -1,6 +1,6 @@
 <?php
 
-namespace NER\ModelBundle\Repository;
+namespace DSG\ModelBundle\Repository;
 
 /**
  * EuropeanaItemRepository

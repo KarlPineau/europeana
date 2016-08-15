@@ -1,7 +1,3 @@
 ner_home_home_index:
     path:     /
     defaults: { _controller: NERHomeBundle:Home:index }
-
-ner_home_europeanaItem_index:
-    path:     /europeana-items
-    defaults: { _controller: NERHomeBundle:EuropeanaItem:index }

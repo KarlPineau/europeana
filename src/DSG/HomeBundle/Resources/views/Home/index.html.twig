@@ -1,0 +1,19 @@
+{% extends "NERHomeBundle::layout.html.twig" %}
+
+{% block title %}Europeana - Dataset Generator{% endblock %}
+
+{% block h1 %}Europeana - Dataset Generator{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-sm-6 col-sm-offset-3">
+            <div class="well">
+                {% include 'DSGHomeBundle:Home:generator_content.html.twig' %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript_sub %}
+    {{ parent() }}
+{% endblock %}

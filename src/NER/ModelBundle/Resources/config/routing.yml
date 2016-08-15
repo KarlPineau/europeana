@@ -4,10 +4,3 @@ ner_model_nameEntityRecognition_generateNameEntityRecognition:
     requirements:
         field:  \S{0,255}
         lang:  \S{0,255}
-
-ner_model_europeanaItem_harvestEuropeanaItem:
-    path:     /europeana-item/{field}/{lang}
-    defaults: { _controller: NERModelBundle:EuropeanaItem:harvestEuropeanaItem }
-    requirements:
-        field:  \S{0,255}
-        lang:  \S{0,255}

@@ -1,0 +1,36 @@
+<form class="form-horizontal" method="post" role="form">
+    {% if not form.vars.valid %}
+    <div class="alert alert-error">
+        <strong>Errors :</strong>
+        {{ form_errors(form) }}
+        {{ form_errors(form.numberOfItems) }}
+        {{ form_errors(form.query) }}
+        {{ form_errors(form.qf) }}
+    </div>
+    <br />
+    {% endif %}
+    
+    <fieldset>
+        <div class="form-group">
+            {{ form_label(form.numberOfItems, "Size of the dataset :", {'label_attr': {'class': 'col-md-3 control-label'}}) }}
+            <div class="col-md-9">
+                {{ form_widget(form.numberOfItems, {'attr': {'value': 10, 'class': 'form-control'}}) }}
+            </div>
+        </div>
+        <div class="form-group">
+            {{ form_label(form.query, "Query :", {'label_attr': {'class': 'col-md-3 control-label'}}) }}
+            <div class="col-md-9">
+                {{ form_widget(form.query, {'attr': {'value': '*', 'class': 'form-control'}}) }}
+            </div>
+        </div>
+        <div class="form-group">
+            {{ form_label(form.qf, "Query facets :", {'label_attr': {'class': 'col-md-3 control-label'}}) }}
+            <div class="col-md-9">
+                {{ form_widget(form.qf, {'attr': {'placeholder': 'LANGUAGE:en', 'class': 'form-control'}}) }}
+            </div>
+        </div>
+    </fieldset>
+        <br />
+    {{ form_rest(form) }}
+    <div class="text-center"><input type="submit" class="btn btn-default" /></div>
+</form>

@@ -1,0 +1,3 @@
+dsg_layout_homepage:
+    path:     /
+    defaults: { _controller: DSGLayoutBundle:Default:index }

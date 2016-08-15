@@ -1,0 +1,21 @@
+{% extends "NERHomeBundle::layout.html.twig" %}
+
+{% block title %}Europeana - Dataset Generator{% endblock %}
+
+{% block h1 %}Europeana - Dataset Generator{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-sm-6 col-sm-offset-3">
+            <div class="well text-center">
+                <h2>Ok, now it could be long ...</h2>
+                <i class="fa fa-spin fa-circle-o-notch fa-5" aria-hidden="true"></i>
+                <small>It could be (very) long if you've selected a large dataset size.</small>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript_sub %}
+    {{ parent() }}
+{% endblock %}

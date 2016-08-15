@@ -1,6 +1,6 @@
 <?php
 
-namespace NER\ModelBundle\Entity;
+namespace DSG\ModelBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * EuropeanaItem
  *
  * @ORM\Table(name="europeana_item")
- * @ORM\Entity(repositoryClass="NER\ModelBundle\Repository\EuropeanaItemRepository")
+ * @ORM\Entity(repositoryClass="DSG\ModelBundle\Repository\EuropeanaItemRepository")
  */
 class EuropeanaItem
 {
@@ -29,6 +29,12 @@ class EuropeanaItem
      * @ORM\Column(name="URI", type="string", length=255, nullable=true)
      */
     private $URI;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="DSG\ModelBundle\Entity\EuropeanaItemsSession")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    protected $europeanaItemsSession;
 
     /**
      * @var \DateTime

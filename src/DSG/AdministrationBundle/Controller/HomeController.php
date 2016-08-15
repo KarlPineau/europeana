@@ -1,10 +1,10 @@
 <?php
 
-namespace NER\HomeBundle\Controller;
+namespace DSG\AdministrationBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class EuropeanaItemController extends Controller
+class HomeController extends Controller
 {
     public function indexAction()
     {
