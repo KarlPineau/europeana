@@ -1,0 +1,18 @@
+{% extends "NERHomeBundle::layout.html.twig" %}
+
+{% block title %}Europeana - BabelNet{% endblock %}
+
+{% block h1 %}Europeana - BabelNet{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-sm-12">
+            <p class="lead">Response time: {{ timeQuery }} sec.</p>
+            {{ dump(items) }}
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript_sub %}
+    {{ parent() }}
+{% endblock %}

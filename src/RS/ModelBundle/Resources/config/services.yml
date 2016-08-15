@@ -1,0 +1,4 @@
+services:
+    rs_model.dataset:
+        class: RS\ModelBundle\Service\dataset
+        arguments: [ "@doctrine.orm.entity_manager"]

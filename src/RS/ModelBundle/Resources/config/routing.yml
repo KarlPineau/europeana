@@ -1,0 +1,3 @@
+rs_model_homepage:
+    path:     /
+    defaults: { _controller: RSModelBundle:Default:index }

@@ -1,0 +1,94 @@
+<?php
+
+namespace NER\ModelBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Validator\Constraints as Assert;
+
+/**
+ * NameEntityRecognition
+ *
+ * @ORM\Table(name="name_entity_recognition")
+ * @ORM\Entity(repositoryClass="NER\ModelBundle\Repository\NameEntityRecognitionRepository")
+ */
+class NameEntityRecognition
+{
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="literal", type="string", length=255)
+     */
+    private $literal;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="field", type="string", length=255)
+     */
+    private $field;
+
+    /**
+     * @var string
+     * @Assert\Url()
+     * @ORM\Column(name="uri", type="string", length=255, nullable=true)
+     */
+    private $usedIn;
+
+    /**
+     * @var string
+     * @Assert\Url()
+     * @ORM\Column(name="wikidataURI", type="string", length=255, nullable=true)
+     */
+    private $wikidataURI;
+
+    /**
+     * @var array
+     *
+     * @ORM\Column(name="synsets", type="array", nullable=true)
+     */
+    private $synsets;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="synset", type="string", length=255, nullable=true)
+     */
+    private $synset;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="errorStatement", type="string", length=255, nullable=true)
+     */
+    private $errorStatement;
+
+    /**
+     * @var \DateTime
+     *
+     * @Gedmo\Timestampable(on="create")
+     * @ORM\Column(name="createDate", type="datetime", nullable=false)
+     */
+    protected $createDate;
+
+
+    /**
+     * Get id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+}
+

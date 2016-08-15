@@ -1,0 +1,4 @@
+services:
+    ner_model.ner:
+        class: NER\ModelBundle\Service\nameEntityRecognition
+        arguments: [ "@doctrine.orm.entity_manager", "@buzz"]

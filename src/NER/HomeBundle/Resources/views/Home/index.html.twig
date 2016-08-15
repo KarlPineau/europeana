@@ -1,0 +1,22 @@
+{% extends "NERHomeBundle::layout.html.twig" %}
+
+{% block title %}Europeana - BabelNet{% endblock %}
+
+{% block h1 %}Europeana - BabelNet{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="jumbotron">
+                <div class="row">
+                    <h2 class="text-center">Hello world!</h2>
+                    <p><a href="{{ path('ner_home_europeanaItem_index') }}">EuropeanaItems list</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript_sub %}
+    {{ parent() }}
+{% endblock %}

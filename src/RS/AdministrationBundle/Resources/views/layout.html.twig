@@ -1,0 +1,30 @@
+{# src/DATA/AdministrationBundle/Resources/views/layout.html.twig #}
+ 
+{% extends "RSLayoutBundle::layout.html.twig" %}
+
+{% block title %}
+    Administration - {{ parent() }}
+{% endblock %}
+
+{% block follow %}
+    <meta name="robots" content="noindex,nofollow" />
+{% endblock %}
+
+{% block h1 %}{% endblock %}
+
+{% block h1_extend %}{% endblock %}
+
+{% block breadcrumb %}
+    {{parent()}}
+    {% if app.request.get('_route') == 'tb_administration_home_index' %}<li class="active">Administration</li>
+    {% else %}<li><a href="{{ path('tb_administration_home_index') }}">Administration</a></li>
+    {% endif %}
+{% endblock %}
+
+{% block content %}{% endblock %}
+
+{% block javascript %}
+    {{parent()}}
+    {% block javascript_sub %}
+    {% endblock %}
+{% endblock %}

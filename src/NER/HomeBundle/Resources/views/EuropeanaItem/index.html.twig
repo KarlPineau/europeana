@@ -1,0 +1,35 @@
+{% extends "NERHomeBundle::layout.html.twig" %}
+
+{% block title %}Europeana - BabelNet{% endblock %}
+
+{% block h1 %}Europeana - BabelNet{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-sm-12">
+            <a href="{{ path('ner_model_europeanaItem_harvestEuropeanaItem', {'field': 'creator', 'lang': 'fr'}) }}">Harvesting Europeana Items</a>
+            <table class="table table-bordered table-striped">
+                <caption>EuropeanaItems list</caption>
+                <tr>
+                    <th>#</th>
+                    <th>URI</th>
+                </tr>
+                {% for europeanaItem in europeanaItems %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td><a href="{{ europeanaItem.URI }}">{{ europeanaItem.URI }}</a></td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td>#</td>
+                        <td>No result ...</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript_sub %}
+    {{ parent() }}
+{% endblock %}

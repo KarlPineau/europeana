@@ -1,0 +1,4 @@
+services:
+#    rs_layout.example:
+#        class: RS\LayoutBundle\Example
+#        arguments: ["@service_id", "plain_value", %parameter%]
