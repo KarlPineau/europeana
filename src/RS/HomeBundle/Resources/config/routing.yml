@@ -1,3 +1,9 @@
 rs_home_home_index:
     path:     /
     defaults: { _controller: RSHomeBundle:Home:index }
+
+rs_home_home_recommender:
+    path:     /recommender/{recommenderSearch_id}
+    defaults: { _controller: RSHomeBundle:Home:recommender }
+    requirements:
+        recommenderSearch_id: \d+

@@ -1,4 +1,4 @@
-{% extends "NERHomeBundle::layout.html.twig" %}
+{% extends "DSGHomeBundle::layout.html.twig" %}
 
 {% block title %}Europeana - Dataset Generator{% endblock %}
 
@@ -9,7 +9,9 @@
         <div class="col-sm-6 col-sm-offset-3">
             <div class="well text-center">
                 <h2>Ok, now it could be long ...</h2>
-                <i class="fa fa-spin fa-circle-o-notch fa-5" aria-hidden="true"></i>
+                <strong>Your result id number : <span id="europeanaItemsSession-id">{{ europeanaItemsSession.id }}</span>. <br />
+                    You'll receive an email when your dataset will be ready.</strong>
+                <div style="padding: 20px;"><i class="fa fa-spin fa-circle-o-notch fa-3x" aria-hidden="true"></i><br />Computing ...</div>
                 <small>It could be (very) long if you've selected a large dataset size.</small>
             </div>
         </div>
@@ -18,4 +20,20 @@
 
 {% block javascript_sub %}
     {{ parent() }}
+
+    <script>
+        $(document).ready(function() {
+            $.ajax({
+                async: false,
+                dataType: "json",
+                url: Routing.generate('dsg_home_home_compute', {europeanaItemsSession_id: $('#europeanaItemsSession-id').text()}),
+                success: function(data){
+                    console.log(data);
+                },
+                error: function(error){
+                    console.log(dump(error));
+                }
+            });
+        });
+    </script>
 {% endblock %}

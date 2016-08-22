@@ -6,6 +6,7 @@
         {{ form_errors(form.numberOfItems) }}
         {{ form_errors(form.query) }}
         {{ form_errors(form.qf) }}
+        {{ form_errors(form.email) }}
     </div>
     <br />
     {% endif %}
@@ -27,6 +28,12 @@
             {{ form_label(form.qf, "Query facets :", {'label_attr': {'class': 'col-md-3 control-label'}}) }}
             <div class="col-md-9">
                 {{ form_widget(form.qf, {'attr': {'placeholder': 'LANGUAGE:en', 'class': 'form-control'}}) }}
+            </div>
+        </div>
+        <div class="form-group">
+            {{ form_label(form.email, "Your email :", {'label_attr': {'class': 'col-md-3 control-label'}}) }}
+            <div class="col-md-9">
+                {{ form_widget(form.email, {'attr': {'placeholder': 'You\'ll receive an alert when your dataset will be ready', 'class': 'form-control'}}) }}
             </div>
         </div>
     </fieldset>

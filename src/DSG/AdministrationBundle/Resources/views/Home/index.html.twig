@@ -1,13 +1,13 @@
-{% extends "NERHomeBundle::layout.html.twig" %}
+{% extends "DSGAdministrationBundle::layout.html.twig" %}
 
-{% block title %}Europeana - BabelNet{% endblock %}
+{% block title %}Europeana - DataSet Generator{% endblock %}
 
-{% block h1 %}Europeana - BabelNet{% endblock %}
+{% block h1 %}Europeana - DataSet Generator{% endblock %}
 
 {% block content %}
     <div class="row">
         <div class="col-sm-12">
-            <a href="{{ path('ner_model_europeanaItem_harvestEuropeanaItem', {'field': 'creator', 'lang': 'fr'}) }}">Harvesting Europeana Items</a>
+            <a href="{{ path('dsg_administration_home_test') }}">Test mail</a>
             <table class="table table-bordered table-striped">
                 <caption>EuropeanaItems list</caption>
                 <tr>

@@ -40,9 +40,9 @@ class NameEntityRecognition
     /**
      * @var string
      * @Assert\Url()
-     * @ORM\Column(name="uri", type="string", length=255, nullable=true)
+     * @ORM\Column(name="europeanaURI", type="string", length=255, nullable=true)
      */
-    private $usedIn;
+    private $europeanaURI;
 
     /**
      * @var string
@@ -91,4 +91,3 @@ class NameEntityRecognition
         return $this->id;
     }
 }
-

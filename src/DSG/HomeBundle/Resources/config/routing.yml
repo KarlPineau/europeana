@@ -8,6 +8,12 @@ dsg_home_home_wait:
     requirements:
         europeanaItemsSession_id: \d+
 
+dsg_home_home_compute:
+    path:     /compute/{europeanaItemsSession_id}
+    defaults: { _controller: DSGHomeBundle:Home:compute }
+    options:
+        expose: true
+
 dsg_home_home_result:
     path:     /result/{europeanaItemsSession_id}
     defaults: { _controller: DSGHomeBundle:Home:result }

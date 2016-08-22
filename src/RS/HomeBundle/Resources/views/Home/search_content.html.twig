@@ -1,0 +1,59 @@
+<form class="form-horizontal" method="post" role="form">
+    {% if not form.vars.valid %}
+    <div class="alert alert-error">
+        <strong>Errors :</strong>
+        {{ form_errors(form) }}
+        {{ form_errors(form.item) }}
+        {{ form_errors(form.recommenderParameters.isDcSubject) }}
+        {{ form_errors(form.recommenderParameters.isDcType) }}
+        {{ form_errors(form.recommenderParameters.isDcCreator) }}
+        {{ form_errors(form.recommenderParameters.isDcContributor) }}
+        {{ form_errors(form.recommenderParameters.isTitle) }}
+    </div>
+    <br />
+    {% endif %}
+    
+    <fieldset>
+        <div class="form-group">
+            {{ form_label(form.item, "Id of the item :", {'label_attr': {'class': 'col-md-3 control-label'}}) }}
+            <div class="col-md-9">
+                {{ form_widget(form.item, {'attr': {'placeholder': '2021603/teylers_col28_dat13311_TEY001008491', 'class': 'form-control'}}) }}
+            </div>
+        </div>
+        <hr />
+        <strong>Parameters of the related items query :</strong>
+        <div class="form-group">
+            {{ form_label(form.recommenderParameters.isDcSubject, "dcSubject :", {'label_attr': {'class': 'col-md-3 control-label'}}) }}
+            <div class="col-md-9">
+                {{ form_widget(form.recommenderParameters.isDcSubject, {'attr': {'class': ''}}) }}
+            </div>
+        </div>
+        <div class="form-group">
+            {{ form_label(form.recommenderParameters.isDcType, "dcType :", {'label_attr': {'class': 'col-md-3 control-label'}}) }}
+            <div class="col-md-9">
+                {{ form_widget(form.recommenderParameters.isDcType, {'attr': {'placeholder': '', 'class': ''}}) }}
+            </div>
+        </div>
+        <div class="form-group">
+            {{ form_label(form.recommenderParameters.isDcCreator, "dcCreator :", {'label_attr': {'class': 'col-md-3 control-label'}}) }}
+            <div class="col-md-9">
+                {{ form_widget(form.recommenderParameters.isDcCreator, {'attr': {'placeholder': '', 'class': ''}}) }}
+            </div>
+        </div>
+        <div class="form-group">
+            {{ form_label(form.recommenderParameters.isDcContributor, "dcContributor :", {'label_attr': {'class': 'col-md-3 control-label'}}) }}
+            <div class="col-md-9">
+                {{ form_widget(form.recommenderParameters.isDcContributor, {'attr': {'placeholder': '', 'class': ''}}) }}
+            </div>
+        </div>
+        <div class="form-group">
+            {{ form_label(form.recommenderParameters.isTitle, "title :", {'label_attr': {'class': 'col-md-3 control-label'}}) }}
+            <div class="col-md-9">
+                {{ form_widget(form.recommenderParameters.isTitle, {'attr': {'placeholder': '', 'class': ''}}) }}
+            </div>
+        </div>
+    </fieldset>
+        <br />
+    {{ form_rest(form) }}
+    <div class="text-center"><input type="submit" class="btn btn-default" /></div>
+</form>

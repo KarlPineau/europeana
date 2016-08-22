@@ -1,0 +1,70 @@
+{% extends "RSLayoutBundle::layout.html.twig" %}
+
+{% block title %}Europeana recommender system{% endblock %}
+
+{% block h1 %}Europeana recommender system{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-sm-12">
+            {#
+            <div class="jumbotron">
+                <div class="row">
+                    <h2 class="text-center">Hello world!</h2>
+                </div>
+            </div>
+            #}
+
+            {# dump(entities) #}
+            <div class="col-md-12">
+                <h2>Parameters</h2>
+
+
+            </div>
+            {% for container in entities %}
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-6 well">
+                        <h3><a href="http://www.europeana.eu/portal/en/record/{{ container.entity.object.about }}.html">{{ container.title }}</a></h3>
+                        <div class="col-md-6">
+                            <img src="{{ container.entity.object.aggregations[0].edmIsShownBy }}" style="max-width: 300px; max-height: 300px;" />
+                        </div>
+                        <div class="col-md-6">
+                            <dl class="dl-horizontal"><dt>Response time</dt><dd>{{ container.timeQuery }} sec</dd></dl>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h3>Related items</h3>
+                        <dl class="dl-horizontal"><dt>Response time</dt><dd>{{ container.timeRelatedItems }} sec</dd></dl>
+                        <dl class="dl-horizontal"><dt>Results</dt><dd>{{ container.relatedItems.totalResults }}</dd></dl>
+                        {% if container.relatedItems.items is defined %}
+                            {% for relatedItem in container.relatedItems.items %}
+                                <div class="well">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <strong><a href="{{ relatedItem.guid }}" target="_blank">{{ relatedItem.title[0] }}</a></strong>
+                                        </div>
+                                        <div class="col-md-6 text-center">
+                                            {% if relatedItem.edmIsShownBy is defined %}
+                                                <img class="thumbnail" src="{{ relatedItem.edmIsShownBy[0] }}" style="margin: auto; max-width: 150px; max-height: 150px" />
+                                            {% else %}
+                                                <i class="fa fa-picture-o fa-5x" aria-hidden="true"></i>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="alert alert-danger">No detected related items</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript_sub %}
+    {{ parent() }}
+{% endblock %}

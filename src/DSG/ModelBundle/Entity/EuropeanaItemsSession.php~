@@ -24,6 +24,20 @@ class EuropeanaItemsSession
     private $id;
 
     /**
+     * @var string
+     * @Assert\Email()
+     * @ORM\Column(name="email", type="string", length=255, nullable=false)
+     */
+    private $email;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="sentConfirmation", type="boolean", nullable=false)
+     */
+    private $sentConfirmation;
+
+    /**
      * @var int
      *
      * @ORM\Column(name="numberOfItems", type="integer", nullable=false)
@@ -43,6 +57,20 @@ class EuropeanaItemsSession
      * @ORM\Column(name="qf", type="string", length=255, nullable=true)
      */
     private $qf;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="queryCursor", type="string", length=255, nullable=true)
+     */
+    private $queryCursor;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="resultsNumber", type="integer", nullable=true)
+     */
+    private $resultsNumber;
 
     /**
      * @var \DateTime
@@ -157,5 +185,77 @@ class EuropeanaItemsSession
     public function getCreateDate()
     {
         return $this->createDate;
+    }
+
+    /**
+     * Set email
+     *
+     * @param string $email
+     *
+     * @return EuropeanaItemsSession
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    /**
+     * Get email
+     *
+     * @return string
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * Set sentConfirmation
+     *
+     * @param boolean $sentConfirmation
+     *
+     * @return EuropeanaItemsSession
+     */
+    public function setSentConfirmation($sentConfirmation)
+    {
+        $this->sentConfirmation = $sentConfirmation;
+
+        return $this;
+    }
+
+    /**
+     * Get sentConfirmation
+     *
+     * @return boolean
+     */
+    public function getSentConfirmation()
+    {
+        return $this->sentConfirmation;
+    }
+
+    /**
+     * Set resultsNumber
+     *
+     * @param integer $resultsNumber
+     *
+     * @return EuropeanaItemsSession
+     */
+    public function setResultsNumber($resultsNumber)
+    {
+        $this->resultsNumber = $resultsNumber;
+
+        return $this;
+    }
+
+    /**
+     * Get resultsNumber
+     *
+     * @return integer
+     */
+    public function getResultsNumber()
+    {
+        return $this->resultsNumber;
     }
 }

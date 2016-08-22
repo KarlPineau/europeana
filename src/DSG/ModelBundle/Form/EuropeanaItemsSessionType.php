@@ -3,6 +3,7 @@
 namespace DSG\ModelBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -20,6 +21,7 @@ class EuropeanaItemsSessionType extends AbstractType
             ->add('numberOfItems',  IntegerType::class,      array('required' => true))
             ->add('query',          TextType::class,         array('required' => true))
             ->add('qf',             TextType::class,         array('required' => false))
+            ->add('email',          EmailType::class,        array('required' => true))
         ;
     }
     

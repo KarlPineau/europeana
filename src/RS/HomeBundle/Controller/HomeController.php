@@ -2,82 +2,70 @@
 
 namespace RS\HomeBundle\Controller;
 
+use RS\ModelBundle\Entity\RecommenderResults;
+use RS\ModelBundle\Entity\RecommenderSearch;
+use RS\ModelBundle\Form\RecommenderSearchType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 
 class HomeController extends Controller
 {
-    public function indexAction()
+    public function indexAction(Request $request)
     {
-        set_time_limit(0);
-        $buzz = $this->container->get('buzz');
-        $entities = array();
-        foreach($this->get('rs_model.dataset')->getDataSet() as $item) {
-            $timestart=microtime(true);
-            $response = $buzz->get('http://www.europeana.eu/api/v2/record/'.$item.'.json?profile=rich&wskey=api2demo');
-            $timeend=microtime(true);
-            $time=$timeend-$timestart;
-            $timeQuery = number_format($time, 3);
+        $em = $this->getDoctrine()->getManager();
 
-            $entity = json_decode($response->getContent());
-            $mainProxy = $entity->object->proxies[0];
+        $recommenderSearch = new RecommenderSearch();
+        $form = $this->createForm(RecommenderSearchType::class, $recommenderSearch);
 
-            /* dcType */
-            $dcType = '';
-            if(isset($mainProxy->dcType->def)) {$dcType = $mainProxy->dcType->def[0];}
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->persist($recommenderSearch);
+            $em->persist($recommenderSearch->getRecommenderParameters());
+            $em->flush();
 
-            /* dcSubject */
-            $dcSubject = '';
-            if(isset($mainProxy->dcSubject->def)) {$dcSubject = $mainProxy->dcSubject->def[0];}
-
-            /* dcCreator */
-            $dcCreator = '';
-            if(isset($mainProxy->dcCreator->def)) {$dcCreator = $mainProxy->dcCreator->def[0];}
-
-            /* title */
-            $title = '';
-            if(isset($entity->object->title)) {$title = $entity->object->title[0];}
-
-            /* dataProvider */
-            $dataProvider = '';
-            if(isset($entity->object->aggregations[0]->edmDataProvider->def)) {$dataProvider = $entity->object->aggregations[0]->edmDataProvider->def[0];}
-
-            $query = '';
-            if($dcCreator != "") {$query .= 'who:"'.urlencode($dcCreator).'"';}
-            if($dcSubject != "") {$query .= 'what:"'.urlencode($dcSubject).'"';}
-            if($dcType != "") {$query .= 'what:"'.urlencode($dcType).'"';}
-            $query .= '(NOT '.$item.')';
-
-            $timestart2=microtime(true);
-            $relatedItemsResponse = $buzz->get('https://www.europeana.eu/api/v2/search.json?wskey=api2demo&profile=rich&query='.$query);
-            $timeend2=microtime(true);
-            $time2=$timeend2-$timestart2;
-            $timeRelatedItems = number_format($time2, 3);
-            $relatedItems = json_decode($relatedItemsResponse->getContent());
-
-            $entities[] = [
-                'dcType' => $dcType,
-                'dcSubject' => $dcSubject,
-                'dcCreator' => $dcCreator,
-                'title' => $title,
-                'dataProvider' => $dataProvider,
-                'entity' => $entity,
-                'timeQuery' => $timeQuery,
-                'relatedItems' => $relatedItems,
-                'timeRelatedItems' => $timeRelatedItems];
+            return $this->redirectToRoute('rs_home_home_recommender', array('recommenderSearch_id' => $recommenderSearch->getId()));
         }
 
+        return $this->render('RSHomeBundle:Home:index.html.twig', array(
+            'form' => $form->createView(),
+        ));
+    }
 
-        //$response = $buzz->get('http://www.europeana.eu/api/v2/search.json?wskey=api2demo&query=*&qf=PROVIDER:%22Europeana+280%22&rows=1000&profile=rich');
+    public function recommenderAction($recommenderSearch_id)
+    {
+        set_time_limit(0);
+        $em = $this->getDoctrine()->getManager();
 
-        //https://github.com/europeana/europeana-blacklight/blob/develop/app/models/europeana/blacklight/document/more_like_this.rb
-        /*
-            { param: 'what', fields: ['proxies.dcType', 'proxies.dcSubject'], boost: 0.8 },
-            { param: 'who', fields: 'proxies.dcCreator', boost: 0.5 },
-            { param: 'title', fields: 'title', boost: 0.3 },
-            { param: 'DATA_PROVIDER', fields: 'aggregations.edmDataProvider', boost: 0.2 }
-        */
+        $recommenderSearch = $em->getRepository('RSModelBundle:RecommenderSearch')->findOneById($recommenderSearch_id);
+        if($recommenderSearch === null) {throw $this->createNotFoundException('This id is not callable.');}
+        $parameters = $recommenderSearch->getRecommenderParameters();
 
+        $queryItemInformation = $this->get('rs_home.recommenderQuery')->getQuery('http://www.europeana.eu/api/v2/record/'.$recommenderSearch->getItem().'.json?profile=rich&wskey=api2demo');
+        $timeQuery = $queryItemInformation[1];
+        $entity = json_decode($queryItemInformation[0]->getContent());
+        $mainProxy = $entity->object->proxies[0];
 
-        return $this->render('RSHomeBundle:Home:index.html.twig', array('entities' => $entities));
+        $itemInformation = $this->get('rs_home.recommenderQuery')->getInformation($mainProxy, $entity);
+
+        $queryRelatedItemsInformation = $this->get('rs_home.recommenderQuery')->getRecommenderQuery($parameters, $recommenderSearch, $itemInformation);
+
+        $entities[] = [
+            'dcTypes' => $itemInformation['dcTypes'],
+            'dcSubjects' => $itemInformation['dcSubjects'],
+            'dcCreators' => $itemInformation['dcCreators'],
+            'title' => $itemInformation['title'],
+            'dataProvider' => $itemInformation['dataProvider'],
+            'entity' => $entity,
+            'timeQuery' => $timeQuery,
+            'relatedItems' => $queryRelatedItemsInformation['relatedItems'],
+            'timeRelatedItems' => $queryRelatedItemsInformation['timeRelatedItems']];
+
+        $recommenderResult = new RecommenderResults();
+        $recommenderResult->setRecommenderSearch($recommenderSearch);
+        $recommenderResult->setResults($queryRelatedItemsInformation['relatedItems']);
+        $em->persist($recommenderResult);
+        $em->flush();
+
+        return $this->render('RSHomeBundle:Home:recommender.html.twig', array('entities' => $entities));
     }
 }

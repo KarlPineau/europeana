@@ -1,3 +1,7 @@
 dsg_administration_home_index:
     path:     /
     defaults: { _controller: DSGAdministrationBundle:Home:index }
+
+dsg_administration_home_test:
+    path:     /test
+    defaults: { _controller: DSGAdministrationBundle:Home:test }

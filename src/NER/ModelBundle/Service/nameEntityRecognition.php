@@ -18,13 +18,10 @@ class nameEntityRecognition
         $this->key = '90c5d1ce-94a6-4f2b-bc04-6cb46a526b3c'; //9f566346-b8e8-4b41-b4b3-f094ff68f495
     }
 
-    public function nameEntityRecognition($id, $field)
+    public function nameEntityRecognition($content, $field, $uri)
     {
-        $entity = $this->entity->find('one', array('id' => $id), 'large');
-        if ($entity === null) { throw $this->createNotFoundException('Entité : [id='.$id.'] inexistante.'); }
-
         // BabelNet Query:
-        $response = $this->buzz->get('https://babelnet.io/v3/getSynsetIds?word='.urlencode($this->entity->get($field, $entity)).'&langs=FR&key='.$this->key);
+        $response = $this->buzz->get('https://babelnet.io/v3/getSynsetIds?word='.urlencode($content).'&langs=FR&key='.$this->key);
 
         $objectResponse = json_decode($response->getContent());
         if(isset($objectResponse->message) AND $objectResponse->message == 'Your key is not valid or the daily requests limit has been reached. Please visit http://babelnet.org.') {
@@ -33,9 +30,8 @@ class nameEntityRecognition
             // Log BabelNet Result:
             $nameEntityRecognition = new \NER\ModelBundle\Entity\NameEntityRecognition();
             $nameEntityRecognition->setField($field);
-            $nameEntityRecognition->setIsVerified(false);
-            $nameEntityRecognition->setLiteral($this->entity->get($field, $entity));
-            $nameEntityRecognition->setUsedIn($entity);
+            $nameEntityRecognition->setLiteral($content);
+            $nameEntityRecognition->setEuropeanaURI($uri);
             $nameEntityRecognition->setSynsets($response->getContent());
 
             // BabelNet Query for specific synset:
