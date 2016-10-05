@@ -26,28 +26,28 @@ class EuropeanaItemsSession
     /**
      * @var string
      * @Assert\Email()
-     * @ORM\Column(name="email", type="string", length=255, nullable=false)
+     * @ORM\Column(name="email", type="string", length=255, nullable=true)
      */
     private $email;
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="sentConfirmation", type="boolean", nullable=false)
+     * @ORM\Column(name="sentConfirmation", type="boolean", nullable=true)
      */
     private $sentConfirmation;
 
     /**
      * @var int
      *
-     * @ORM\Column(name="numberOfItems", type="integer", nullable=false)
+     * @ORM\Column(name="numberOfItems", type="integer", nullable=true)
      */
     private $numberOfItems;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="query", type="string", length=255, nullable=false)
+     * @ORM\Column(name="query", type="string", length=255, nullable=true)
      */
     private $query;
 
@@ -64,6 +64,20 @@ class EuropeanaItemsSession
      * @ORM\Column(name="queryCursor", type="string", length=255, nullable=true)
      */
     private $queryCursor;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="start", type="integer", nullable=true)
+     */
+    private $start;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="dispatcher", type="integer", nullable=true)
+     */
+    private $dispatcher;
 
     /**
      * @var int
@@ -281,5 +295,53 @@ class EuropeanaItemsSession
     public function getQueryCursor()
     {
         return $this->queryCursor;
+    }
+
+    /**
+     * Set start
+     *
+     * @param integer $start
+     *
+     * @return EuropeanaItemsSession
+     */
+    public function setStart($start)
+    {
+        $this->start = $start;
+
+        return $this;
+    }
+
+    /**
+     * Get start
+     *
+     * @return integer
+     */
+    public function getStart()
+    {
+        return $this->start;
+    }
+
+    /**
+     * Set dispatcher
+     *
+     * @param integer $dispatcher
+     *
+     * @return EuropeanaItemsSession
+     */
+    public function setDispatcher($dispatcher)
+    {
+        $this->dispatcher = $dispatcher;
+
+        return $this;
+    }
+
+    /**
+     * Get dispatcher
+     *
+     * @return integer
+     */
+    public function getDispatcher()
+    {
+        return $this->dispatcher;
     }
 }

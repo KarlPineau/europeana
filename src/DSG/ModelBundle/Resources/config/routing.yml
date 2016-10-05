@@ -1,5 +1,0 @@
-dsg_model_dsGenerator_generator:
-    path:     /generator/{europeanaItemsSession_id}
-    defaults: { _controller: DSGModelBundle:DSGenerator:generator }
-    requirements:
-        europeanaItemsSession_id:  \d+

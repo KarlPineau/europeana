@@ -24,9 +24,16 @@ class RecommenderResults
     /**
      * @var \stdClass
      *
-     * @ORM\Column(name="recommenderSearch", type="object")
+     * @ORM\Column(name="recommenderSearch", type="object", nullable=true)
      */
     private $recommenderSearch;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="item", type="string", length=255, nullable=true)
+     */
+    private $item;
 
     /**
      * @var array
@@ -93,5 +100,28 @@ class RecommenderResults
     {
         return $this->results;
     }
-}
 
+    /**
+     * Set item
+     *
+     * @param string $item
+     *
+     * @return RecommenderResults
+     */
+    public function setItem($item)
+    {
+        $this->item = $item;
+
+        return $this;
+    }
+
+    /**
+     * Get item
+     *
+     * @return string
+     */
+    public function getItem()
+    {
+        return $this->item;
+    }
+}

@@ -8,12 +8,7 @@ class HomeController extends Controller
 {
     public function indexAction()
     {
-        $em = $this->getDoctrine()->getManager();
-        $europeanaItems = $em->getRepository('DSGModelBundle:EuropeanaItem')->findAll();
-
-        return $this->render('DSGAdministrationBundle:Home:index.html.twig', array(
-            'europeanaItems' => $europeanaItems
-        ));
+        return $this->render('DSGAdministrationBundle:Home:index.html.twig');
     }
 
     public function testAction()

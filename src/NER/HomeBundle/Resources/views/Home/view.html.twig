@@ -1,0 +1,84 @@
+{% extends "NERHomeBundle::layout.html.twig" %}
+
+{% block title %}Europeana - BabelNet{% endblock %}
+
+{% block h1 %}Europeana - BabelNet{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-sm-12">
+            <table class="table table-bordered">
+                <caption>{{ ner_model_nameentityrecognition_service.countSynsetsByUploadFile(uploadFile) }} results</caption>
+                <tr>
+                    <th>#</th>
+                    <th>EuropeanaURI</th>
+                    <th>Lang</th>
+                    <th>Field</th>
+                    <th>Tested Literal</th>
+                    <th>Synset</th>
+                    <th>By</th>
+                    <th>Error Statement</th>
+                </tr>
+                {% for entity in entities %}
+                    {% set loopEntity = loop.index %}
+                    {% set countForURI = ner_model_nameentityrecognition_service.countForURI(entity) %}
+
+                    {% for field in ner_model_nameentityrecognition_service.getFieldsByEntity(entity) %}
+                        {% set loopField = loop.index %}
+                        {% set countFieldsByEntity = ner_model_nameentityrecognition_service.countFieldsByEntity(entity) %}
+
+                        {% for synset in ner_model_nameentityrecognition_service.getSynsetsByField(field) %}
+                            {% set countSynsetsByField = ner_model_nameentityrecognition_service.countSynsetsByField(field) %}
+                            <tr>
+                                <td>{{ loopEntity }} - {{ loopField }} - {{ loop.index }}</td>
+                                {% if loopField == 1 and loop.index == 1 %}
+                                <td rowspan="{{ countForURI }}"><a href="{{ entity.europeanaURI }}" target="_blank">Record</a></td>
+                                {% endif %}
+                                {% if loop.index == 1 %}
+                                <td rowspan="{{ countSynsetsByField }}">{{ field.language }}</td>
+                                <td rowspan="{{ countSynsetsByField }}">{{ field.field }}</td>
+                                <td rowspan="{{ countSynsetsByField }}">{{ field.literal }}</td>
+                                {% endif %}
+
+                                <td><a href="http://babelnet.org/synset?word={{ synset.synset }}" target="_blank">{{ synset.synset }}</a></td>
+                                <td class="{% if synset.type == "BabelFy" %}bg-info{% else %}bg-primary{% endif %}">{{ synset.type }}</td>
+                                <td>{{ synset.errorStatement }}</td>
+                            </tr>
+                        {% else %}
+                            <tr {% if loopField == 1 and loop.index == 1 %}{% else %}class="bg-warning"{% endif %}>
+                                <td {% if loopField == 1 and loop.index == 1 %}class="bg-warning"{% endif %}>{{ loopEntity }} - {{ loopField }} - 1</td>
+                                {% if loopField == 1 and loop.index == 1 %}
+                                <td rowspan="{{ countForURI }}"><a href="{{ entity.europeanaURI }}" target="_blank">Here</a></td>
+                                {% endif %}
+                                {% if loop.index == 1 %}
+                                <td {% if loopField == 1 and loop.index == 1 %}class="bg-warning"{% endif %}>{% if field.language != null %}{{ field.language }}{% else %}NULL{% endif %}</td>
+                                <td {% if loopField == 1 and loop.index == 1 %}class="bg-warning"{% endif %}>{{ field.field }}</td>
+                                <td {% if loopField == 1 and loop.index == 1 %}class="bg-warning"{% endif %}>{{ field.literal }}</td>
+                                {% endif %}
+
+                                <td {% if loopField == 1 and loop.index == 1 %}class="bg-warning"{% endif %}>NULL</td>
+                                <td {% if loopField == 1 and loop.index == 1 %}class="bg-warning"{% endif %}>NULL</td>
+                                <td {% if loopField == 1 and loop.index == 1 %}class="bg-warning"{% endif %}>No detected synset</td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr class="bg-danger">
+                            <td>{{ loopEntity }} - 1 - 1</td>
+                            <td rowspan="{{ countForURI }}"><a href="{{ entity.europeanaURI }}" target="_blank">Here</a></td>
+                            <td>NULL</td>
+                            <td>NULL</td>
+                            <td>NULL</td>
+                            <td>NULL</td>
+                            <td>NULL</td>
+                            <td>No detected field</td>
+                        </tr>
+                    {% endfor %}
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript_sub %}
+    {{ parent() }}
+{% endblock %}

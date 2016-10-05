@@ -1,3 +1,9 @@
-ner_administration_homepage:
+ner_administration_home_home:
     path:     /
-    defaults: { _controller: NERAdministrationBundle:Default:index }
+    defaults: { _controller: NERAdministrationBundle:Home:index }
+
+ner_administration_home_process:
+    path:     /process/{uploadFile_id}
+    defaults: { _controller: NERAdministrationBundle:Home:process }
+    requirements:
+        uploadFile_id:  \d+

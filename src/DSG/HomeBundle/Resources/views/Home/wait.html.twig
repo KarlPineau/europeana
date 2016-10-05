@@ -10,8 +10,9 @@
             <div class="well text-center">
                 <h2>Ok, now it could be long ...</h2>
                 <strong>Your result id number : <span id="europeanaItemsSession-id">{{ europeanaItemsSession.id }}</span>. <br />
-                    You'll receive an email when your dataset will be ready.</strong>
-                <div style="padding: 20px;"><i class="fa fa-spin fa-circle-o-notch fa-3x" aria-hidden="true"></i><br />Computing ...</div>
+                    You'll receive an email when your dataset will be ready.<br />
+                    Please keep this window opened.</strong>
+                <div style="padding: 20px;"><i class="fa fa-spin fa-circle-o-notch fa-3x" aria-hidden="true" id="iconInfo"></i><br /><span id="textInfo">Computing ...</span></div>
                 <small>It could be (very) long if you've selected a large dataset size.</small>
             </div>
         </div>
@@ -23,17 +24,25 @@
 
     <script>
         $(document).ready(function() {
-            $.ajax({
-                async: false,
-                dataType: "json",
-                url: Routing.generate('dsg_home_home_compute', {europeanaItemsSession_id: $('#europeanaItemsSession-id').text()}),
-                success: function(data){
-                    console.log(data);
-                },
-                error: function(error){
-                    console.log(dump(error));
-                }
-            });
+            function ajaxLoader() {
+                $.ajax({
+                    dataType: "json",
+                    url: Routing.generate('dsg_home_home_compute', {europeanaItemsSession_id: $('#europeanaItemsSession-id').text()}),
+                    success: function (data) {
+                        console.log(data);
+                        if(data == true) {
+                            $('#iconInfo').removeClass('fa-circle-o-notch fa-spin').addClass('fa-check-circle-o');
+                            $('#textInfo').text('Done. Check your mailing box.')
+                        } else {
+                            ajaxLoader();
+                        }
+                    },
+                    error: function (error) {
+                        console.log(dump(error));
+                    }
+                });
+            }
+            ajaxLoader();
         });
     </script>
 {% endblock %}

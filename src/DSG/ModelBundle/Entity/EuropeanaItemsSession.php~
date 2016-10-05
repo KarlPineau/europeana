@@ -68,6 +68,20 @@ class EuropeanaItemsSession
     /**
      * @var int
      *
+     * @ORM\Column(name="start", type="integer", nullable=true)
+     */
+    private $start;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="dispatcher", type="integer", nullable=true)
+     */
+    private $dispatcher;
+
+    /**
+     * @var int
+     *
      * @ORM\Column(name="resultsNumber", type="integer", nullable=true)
      */
     private $resultsNumber;
@@ -257,5 +271,53 @@ class EuropeanaItemsSession
     public function getResultsNumber()
     {
         return $this->resultsNumber;
+    }
+
+    /**
+     * Set queryCursor
+     *
+     * @param string $queryCursor
+     *
+     * @return EuropeanaItemsSession
+     */
+    public function setQueryCursor($queryCursor)
+    {
+        $this->queryCursor = $queryCursor;
+
+        return $this;
+    }
+
+    /**
+     * Get queryCursor
+     *
+     * @return string
+     */
+    public function getQueryCursor()
+    {
+        return $this->queryCursor;
+    }
+
+    /**
+     * Set start
+     *
+     * @param integer $start
+     *
+     * @return EuropeanaItemsSession
+     */
+    public function setStart($start)
+    {
+        $this->start = $start;
+
+        return $this;
+    }
+
+    /**
+     * Get start
+     *
+     * @return integer
+     */
+    public function getStart()
+    {
+        return $this->start;
     }
 }

@@ -14,7 +14,7 @@ class dataset
         $this->em = $EntityManager;
         $this->dataset = [
             '2048413/item_B4ALIDQMS3AHHUBOGJE5MNAGXO6GSQWJ',
-            /*'2031901/I_101010_INT_1',
+            '2031901/I_101010_INT_1',
             '2023833/foto_epigrafi_immagini_uso_104_104009_1_jpg',
             '2048001/Athena_Plus_ProvidedCHO_KIK_IRPA__Brussels__Belgium__AP_10272754',
             '11620/MNHNBOTANY_MNHN_FRANCE_PC0498090',
@@ -47,7 +47,7 @@ class dataset
             '2022608/TKM_TKM_1500_1978',
             '2064108/Museu_ProvidedCHO_M_nzkabinett__Staatliche_Museen_zu_Berlin_1853819',
             '2058811/DAI__c79f2e174bf4b5bd35c7cb93517dac47__artifact__cho',
-            '91646/SMVK_MM_GreekRoman_3102409',*/
+            '91646/SMVK_MM_GreekRoman_3102409',
         ];
     }
 

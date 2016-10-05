@@ -16,9 +16,6 @@
 
 {% block breadcrumb %}
     {{parent()}}
-    {% if app.request.get('_route') == 'tb_administration_home_index' %}<li class="active">Administration</li>
-    {% else %}<li><a href="{{ path('tb_administration_home_index') }}">Administration</a></li>
-    {% endif %}
 {% endblock %}
 
 {% block content %}{% endblock %}

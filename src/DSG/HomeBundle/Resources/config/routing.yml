@@ -19,3 +19,7 @@ dsg_home_home_result:
     defaults: { _controller: DSGHomeBundle:Home:result }
     requirements:
         europeanaItemsSession_id: \d+
+
+dsg_home_test_test:
+    path:     /test
+    defaults: { _controller: DSGHomeBundle:Test:test }

@@ -1,3 +1,9 @@
 ner_home_home_index:
     path:     /
     defaults: { _controller: NERHomeBundle:Home:index }
+
+ner_home_home_view:
+    path:     /{uploadFile_id}
+    defaults: { _controller: NERHomeBundle:Home:view }
+    requirements:
+        uploadFile_id:  \d+

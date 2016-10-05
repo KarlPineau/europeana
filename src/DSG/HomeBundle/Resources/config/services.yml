@@ -1,4 +1,4 @@
 services:
-#    dsg_home.example:
-#        class: DSG\HomeBundle\Example
-#        arguments: ["@service_id", "plain_value", %parameter%]
+    dsg_model.dsgenerator:
+        class: DSG\HomeBundle\Service\DSGenerator
+        arguments: [ "@doctrine.orm.entity_manager", "@buzz"]

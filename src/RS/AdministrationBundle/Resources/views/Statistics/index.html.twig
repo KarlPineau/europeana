@@ -1,0 +1,149 @@
+{% extends "RSLayoutBundle::layout-fluid.html.twig" %}
+
+{% block title %}Statistics about similar items{% endblock %}
+
+{% block h1 %}Statistics about similar items{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-xs-12">
+            <table class="table table-condensed table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th rowspan="2">#</th>
+                        <th colspan="2"><abbr title="Reference Item">RI</abbr> info</th>
+                        <th rowspan="2">Pourcentage of <abbr title="similar items">SIs</abbr> with same <abbr title="DataSet">DS</abbr> than <abbr title="Reference Item">RI</abbr></th>
+                        <th colspan="2">Composition of <abbr title="similar items">SIs</abbr> in <abbr title="DataSet">DS</abbr></th>
+                        <th colspan="5">Is that same <abbr title="DataSet">DS</abbr> than <abbr title="Reference Item">RI</abbr> ?</th>
+                    </tr>
+                    <tr>
+                        <th>Item</th>
+                        <th>Dataset</th>
+                        <th>diff <abbr title="DataSet">DS</abbr> > nb of <abbr title="DataSet">DS</abbr></th>
+                        <th>List</th>
+                        <th>#1</th>
+                        <th>#2</th>
+                        <th>#3</th>
+                        <th>#4</th>
+                        <th>#5</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% set totalSimilarPourcentage = 0 %}
+                {% set totalList = 0 %}
+                {% set similarCount = 0 %}
+                {% set items1 = 0 %}
+                {% set items2 = 0 %}
+                {% set items3 = 0 %}
+                {% set items4 = 0 %}
+                {% set items5 = 0 %}
+
+                {% for itemInfos in returnList %}
+                    {% set containerItem = itemInfos['containerItem'] %}
+                    {% set item = containerItem['europeana_id'] %}
+                    {% set dataset = containerItem['edm_datasetName'] %}
+                    {% set thumbnail = containerItem['provider_aggregation_edm_isShownBy'] %}
+
+                    {% set similarItems = itemInfos['similarItems'] %}
+
+                    {% set similarPourcentage = 0 %}
+                    {% for containerSimilarItem in similarItems %}
+                        {% if containerSimilarItem['edm_datasetName'] == dataset %}{% set similarPourcentage = similarPourcentage+1 %}{% endif %}
+                    {% endfor %}
+                    {% set totalSimilarPourcentage = totalSimilarPourcentage+similarPourcentage %}
+                    {% set similarCount = similarCount+(similarItems|length) %}
+
+                    {% set listArray = [] %}
+                    {% for containerSimilarItem in similarItems %}
+                        {% if containerSimilarItem['edm_datasetName'] not in listArray %}
+                            {% set listArray = listArray|merge([containerSimilarItem['edm_datasetName']]) %}
+                        {% endif %}
+                    {% endfor %}
+                    {% set totalList = totalList+(listArray|length) %}
+
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>
+                            <a href="http://www.europeana.eu/portal/en/record{{ item }}.html" target="_blank">{{ item|slice(1, 20) }}{% if item|length > 20 %}...{% endif %}</a>
+                            {% if thumbnail != null and profile == 'rich' %}
+                                <br />
+                                <img src="{{ thumbnail }}" class="thumbnail" style="max-height: 100px; max-width: 100px;" />
+                            {% endif %}
+                        </td>
+                        <td><span title="{{ dataset }}">{{ dataset|slice(1, 20) }}{% if dataset|length > 20 %}...{% endif %}</span></td>
+                        <td>{% if similarItems|length > 0 %}{{ ((similarPourcentage*100)/(similarItems|length))|round(2, 'floor') }}%{% endif %}</td>
+                        <td>{{ listArray|length }} -> {{ similarItems|length }}</td>
+                        <td>
+                            <ul class="list-unstyled">
+                            {% for containerSimilarItem in similarItems %}
+                                <li>
+                                    <a href="http://www.europeana.eu/portal/en/record{{ containerSimilarItem['europeana_id'] }}.html" target="_blank" title="{{ containerSimilarItem['edm_datasetName'] }}">{{ containerSimilarItem['edm_datasetName']|slice(1, 20) }}{% if containerSimilarItem['edm_datasetName']|length > 20 %}...{% endif %}</a>
+                                    {% if containerSimilarItem['provider_aggregation_edm_isShownBy'] != null and profile == 'rich' %}
+                                        <br />
+                                        <img src="{{ containerSimilarItem['provider_aggregation_edm_isShownBy'] }}" class="thumbnail" style="max-height: 100px; max-width: 100px;" />
+                                    {% endif %}
+                                </li>
+                            {% else %}
+                                <li>No Item</li>
+                            {% endfor %}
+                            </ul>
+                        </td>
+                        <td>
+                            {% if similarItems[0] is defined %}
+                                {% if similarItems[0]['edm_datasetName'] == dataset %}<span class="text-primary">Yes</span>{% set items1 = items1+1 %}{% else %}<span class="text-warning">No</span>{% endif %}
+                            {% else %}
+                                <span class="text-danger">Undef.</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if similarItems[1] is defined %}
+                                {% if similarItems[1]['edm_datasetName'] == dataset %}<span class="text-primary">Yes</span>{% set items2 = items2+1 %}{% else %}<span class="text-warning">No</span>{% endif %}
+                            {% else %}
+                                <span class="text-danger">Undef.</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if similarItems[2] is defined %}
+                                {% if similarItems[2]['edm_datasetName'] == dataset %}<span class="text-primary">Yes</span>{% set items3 = items3+1 %}{% else %}<span class="text-warning">No</span>{% endif %}
+                            {% else %}
+                                <span class="text-danger">Undef.</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if similarItems[3] is defined %}
+                                {% if similarItems[3]['edm_datasetName'] == dataset %}<span class="text-primary">Yes</span>{% set items4 = items4+1 %}{% else %}<span class="text-warning">No</span>{% endif %}
+                            {% else %}
+                                <span class="text-danger">Undef.</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if similarItems[4] is defined %}
+                                {% if similarItems[4]['edm_datasetName'] == dataset %}<span class="text-primary">Yes</span>{% set items5 = items5+1 %}{% else %}<span class="text-warning">No</span>{% endif %}
+                            {% else %}
+                                <span class="text-danger">Undef.</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                    <tr>
+                        <th>#</th>
+                        <th>TOTAL</th>
+                        <th></th>
+                        <th>Average: {{ ((totalSimilarPourcentage*100)/(similarCount))|round(2, 'floor') }}%</th>
+                        <th>Nb of DS<br />Average: {{ (totalList/(returnList|length))|round(2, 'floor') }}</th>
+                        <th></th>
+                        <th>{{ ((items1*100)/(returnList|length))|round(2, 'floor') }}%</th>
+                        <th>{{ ((items2*100)/(returnList|length))|round(2, 'floor') }}%</th>
+                        <th>{{ ((items3*100)/(returnList|length))|round(2, 'floor') }}%</th>
+                        <th>{{ ((items4*100)/(returnList|length))|round(2, 'floor') }}%</th>
+                        <th>{{ ((items5*100)/(returnList|length))|round(2, 'floor') }}%</th>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript_sub %}
+    {{ parent() }}
+{% endblock %}

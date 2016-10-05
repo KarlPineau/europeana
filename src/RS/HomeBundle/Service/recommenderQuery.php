@@ -56,7 +56,7 @@ class recommenderQuery
         ];
     }
 
-    public function getRecommenderQuery($parameters, $recommenderSearch, $itemInformation)
+    public function getRecommenderQuery($parameters, $item, $itemInformation)
     {
         //https://github.com/europeana/europeana-blacklight/blob/develop/app/models/europeana/blacklight/document/more_like_this.rb
         /*
@@ -89,7 +89,7 @@ class recommenderQuery
         if($parameters->getIsTitle() == true) {$query .= urlencode('title:"'.$itemInformation['title'].'"');}
 
 
-        $query .= urlencode('NOT europeana_id:"/'.$recommenderSearch->getItem().'"');
+        $query .= urlencode('NOT europeana_id:"/'.$item.'"');
 
         $relatedItemsInformation = $this->getQuery('http://www.europeana.eu/api/v2/search.json?wskey=api2demo&profile=rich&query='.$query);
         $timeRelatedItems = $relatedItemsInformation[1];
@@ -103,6 +103,7 @@ class recommenderQuery
 
     public function getQuery($query)
     {
+        $this->buzz->getClient()->setTimeout(0);
         $timeStart = microtime(true);
         $response = $this->buzz->get($query);
         $timeEnd = microtime(true);

@@ -1,0 +1,50 @@
+<form class="form-horizontal" method="post" role="form">
+    {% if not form.vars.valid %}
+    <div class="alert alert-error">
+        <strong>Errors :</strong>
+        {{ form_errors(form) }}
+        {{ form_errors(form.isDcSubject) }}
+        {{ form_errors(form.isDcType) }}
+        {{ form_errors(form.isDcCreator) }}
+        {{ form_errors(form.isDcContributor) }}
+        {{ form_errors(form.isTitle) }}
+    </div>
+    <br />
+    {% endif %}
+    
+        <strong>Parameters of the related items query :</strong>
+        <div class="form-group">
+            {{ form_label(form.isDcSubject, "dcSubject :", {'label_attr': {'class': 'col-md-3 control-label'}}) }}
+            <div class="col-md-9">
+                {{ form_widget(form.isDcSubject, {'attr': {'class': ''}}) }}
+            </div>
+        </div>
+        <div class="form-group">
+            {{ form_label(form.isDcType, "dcType :", {'label_attr': {'class': 'col-md-3 control-label'}}) }}
+            <div class="col-md-9">
+                {{ form_widget(form.isDcType, {'attr': {'placeholder': '', 'class': ''}}) }}
+            </div>
+        </div>
+        <div class="form-group">
+            {{ form_label(form.isDcCreator, "dcCreator :", {'label_attr': {'class': 'col-md-3 control-label'}}) }}
+            <div class="col-md-9">
+                {{ form_widget(form.isDcCreator, {'attr': {'placeholder': '', 'class': ''}}) }}
+            </div>
+        </div>
+        <div class="form-group">
+            {{ form_label(form.isDcContributor, "dcContributor :", {'label_attr': {'class': 'col-md-3 control-label'}}) }}
+            <div class="col-md-9">
+                {{ form_widget(form.isDcContributor, {'attr': {'placeholder': '', 'class': ''}}) }}
+            </div>
+        </div>
+        <div class="form-group">
+            {{ form_label(form.isTitle, "title :", {'label_attr': {'class': 'col-md-3 control-label'}}) }}
+            <div class="col-md-9">
+                {{ form_widget(form.isTitle, {'attr': {'placeholder': '', 'class': ''}}) }}
+            </div>
+        </div>
+    </fieldset>
+        <br />
+    {{ form_rest(form) }}
+    <div class="text-center"><input type="submit" class="btn btn-default" /></div>
+</form>

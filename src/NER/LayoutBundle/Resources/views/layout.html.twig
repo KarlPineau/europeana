@@ -43,9 +43,10 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="{{ path('rs_home_home_index') }}" id="home-logo">
-                <span class="navbar-brand" style=""><h1 style="margin-top: -15px;">{% block h1 %}{% endblock %}</h1></span>
+            <a class="navbar-brand" href="{{ path('ner_home_home_index') }}" id="home-logo">
+                <img src="{{ asset('images/logo.png') }}" alt="Europeana" style="max-height: 39px; max-width:100px; margin-top: -9px; display: inline;" />
             </a>
+            <span class="navbar-brand" style=""><h1 style="margin-top: 0px;">{% block h1 %}{% endblock %}</h1></span>
         </div>
         <div class="collapse navbar-collapse">
             {# if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
@@ -75,7 +76,7 @@
                 <div class="pull-right">{% block h1_extend %}{% endblock %}</div>
                 <ol class="breadcrumb">
                     {% block breadcrumb %}
-                        <li><a href="{{ path('rs_home_home_index') }}">Accueil</a></li>
+                        <li><a href="{{ path('ner_home_home_index') }}">Home</a></li>
                     {% endblock %}
                 </ol>
             </div>

@@ -7,25 +7,8 @@
 {% block content %}
     <div class="row">
         <div class="col-sm-12">
-            <a href="{{ path('dsg_administration_home_test') }}">Test mail</a>
-            <table class="table table-bordered table-striped">
-                <caption>EuropeanaItems list</caption>
-                <tr>
-                    <th>#</th>
-                    <th>URI</th>
-                </tr>
-                {% for europeanaItem in europeanaItems %}
-                    <tr>
-                        <td>{{ loop.index }}</td>
-                        <td><a href="{{ europeanaItem.URI }}">{{ europeanaItem.URI }}</a></td>
-                    </tr>
-                {% else %}
-                    <tr>
-                        <td>#</td>
-                        <td>No result ...</td>
-                    </tr>
-                {% endfor %}
-            </table>
+            <a href="{{ path('dsg_administration_home_test') }}">Test mail</a> -
+            <a href="{{ path('dsg_administration_babelnetdataset_statisticsLang') }}">BabelNet DataSet generator</a>
         </div>
     </div>
 {% endblock %}

@@ -1,0 +1,10 @@
+<div class="col-md-3">
+    <strong style="font-size: 1em;">{{ loop.index }} : <a href="{{ relatedItem.guid }}" target="_blank" title="{{ relatedItem.title[0] }}">{{ relatedItem.title[0]|slice(0, 30) }}{% if relatedItem.title[0]|length > 30 %}...{% endif %}</a></strong>
+    <div class="block-center">
+        {% if relatedItem.edmIsShownBy is defined %}
+            <a href="{{ relatedItem.edmIsShownBy[0] }}" class="fancybox"><img class="thumbnail" src="{{ relatedItem.edmIsShownBy[0] }}" style="margin: auto; max-width: 100px; max-height: 100px;" /></a>
+        {% else %}
+            <i class="fa fa-picture-o fa-3x" aria-hidden="true"></i>
+        {% endif %}
+    </div>
+</div>

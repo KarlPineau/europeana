@@ -7,3 +7,13 @@ rs_home_home_recommender:
     defaults: { _controller: RSHomeBundle:Home:recommender }
     requirements:
         recommenderSearch_id: \d+
+
+rs_home_dataset_index:
+    path:     /dataset/
+    defaults: { _controller: RSHomeBundle:DataSet:index }
+
+rs_home_dataset_recommender:
+    path:     /dataset/recommender/{recommenderParameter_id}
+    defaults: { _controller: RSHomeBundle:DataSet:recommender }
+    requirements:
+        recommenderParameter_id: \d+

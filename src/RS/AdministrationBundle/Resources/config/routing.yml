@@ -1,3 +1,20 @@
-rs_administration_homepage:
-    path:     /
-    defaults: { _controller: RSAdministrationBundle:Default:index }
+rs_administration_current_query:
+    path:     /current/query
+    defaults: { _controller: RSAdministrationBundle:Current:query }
+
+rs_administration_sr_query:
+    path:     /sr/query
+    defaults: { _controller: RSAdministrationBundle:SR:query }
+
+rs_administration_test_test:
+    path:     /test/test
+    defaults: { _controller: RSAdministrationBundle:Test:query }
+
+rs_administration_statistics_query:
+    path:     /statistics/query
+    defaults: { _controller: RSAdministrationBundle:Statistics:query }
+
+rs_administration_statistics_view:
+    path:     /statistics/view
+    defaults: { _controller: RSAdministrationBundle:Statistics:view }
+

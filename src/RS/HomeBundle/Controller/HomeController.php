@@ -47,7 +47,7 @@ class HomeController extends Controller
 
         $itemInformation = $this->get('rs_home.recommenderQuery')->getInformation($mainProxy, $entity);
 
-        $queryRelatedItemsInformation = $this->get('rs_home.recommenderQuery')->getRecommenderQuery($parameters, $recommenderSearch, $itemInformation);
+        $queryRelatedItemsInformation = $this->get('rs_home.recommenderQuery')->getRecommenderQuery($parameters, $recommenderSearch->getItem(), $itemInformation);
 
         $entities[] = [
             'dcTypes' => $itemInformation['dcTypes'],

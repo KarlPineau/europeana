@@ -5,3 +5,33 @@ dsg_administration_home_index:
 dsg_administration_home_test:
     path:     /test
     defaults: { _controller: DSGAdministrationBundle:Home:test }
+
+# Europeana Assessment
+dsg_administration_babelnetdataset_statisticsLang:
+    path:     /europeana-assessment/statistics-language
+    defaults: { _controller: DSGAdministrationBundle:EuropeanaAssessment:statisticsLang }
+
+dsg_administration_babelnetdataset_statisticsCountry:
+    path:     /europeana-assessment/statistics-country
+    defaults: { _controller: DSGAdministrationBundle:EuropeanaAssessment:statisticsCountry }
+
+dsg_administration_babelnetdataset_statisticsType:
+    path:     /europeana-assessment/statistics-type
+    defaults: { _controller: DSGAdministrationBundle:EuropeanaAssessment:statisticsType }
+
+dsg_administration_babelnetdataset_statisticsCompleteness:
+    path:     /europeana-assessment/statistics-completeness
+    defaults: { _controller: DSGAdministrationBundle:EuropeanaAssessment:statisticsCompleteness }
+
+dsg_administration_babelnetdataset_statisticsDataset:
+    path:     /europeana-assessment/statistics-dataset
+    defaults: { _controller: DSGAdministrationBundle:EuropeanaAssessment:statisticsDataset }
+
+dsg_administration_babelnetdataset_process:
+    path:     /europeana-assessment/process
+    defaults: { _controller: DSGAdministrationBundle:EuropeanaAssessment:process }
+
+# BabelNet Dataset
+dsg_administration_babelnetdataset_query:
+    path:     /babelnet/query
+    defaults: { _controller: DSGAdministrationBundle:BabelNetDataSet:query }

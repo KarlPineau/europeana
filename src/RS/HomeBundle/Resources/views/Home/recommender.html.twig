@@ -27,7 +27,11 @@
                     <div class="col-md-6 well">
                         <h3><a href="http://www.europeana.eu/portal/en/record/{{ container.entity.object.about }}.html">{{ container.title }}</a></h3>
                         <div class="col-md-6">
-                            <img src="{{ container.entity.object.aggregations[0].edmIsShownBy }}" style="max-width: 300px; max-height: 300px;" />
+                            {% if container.entity.object.aggregations[0].edmIsShownBy is defined %}
+                                <img src="{{ container.entity.object.aggregations[0].edmIsShownBy }}" style="max-width: 300px; max-height: 300px;" />
+                            {% else %}
+                                <i class="fa fa-picture-o fa-5x" aria-hidden="true"></i>
+                            {% endif %}
                         </div>
                         <div class="col-md-6">
                             <dl class="dl-horizontal"><dt>Response time</dt><dd>{{ container.timeQuery }} sec</dd></dl>

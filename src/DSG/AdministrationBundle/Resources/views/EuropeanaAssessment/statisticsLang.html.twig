@@ -1,0 +1,44 @@
+{% extends "DSGAdministrationBundle::layout.html.twig" %}
+
+{% block title %}DataSet Generator{% endblock %}
+
+{% block h1 %}DataSet Generator{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-sm-12">
+            <h2>Global stats :</h2>
+            <dl class="dl-horizontal"><dt>Total Europeana:</dt><dd>{{ countTotalEuropeana|number_format(2, '.', ',') }}</dd></dl>
+            <hr />
+            <h2>Language stats :</h2>
+            <dl class="dl-horizontal"><dt>Total Language:</dt><dd>{{ langCountTotal|number_format(2, '.', ',') }}</dd></dl>
+
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Language</th>
+                        <th>Number</th>
+                        <th>% on languages</th>
+                        <th>% on Europeana</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for lang, count in langs %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>{{ lang }}</td>
+                            <td>{{ count|number_format(2, '.', ',') }}</td>
+                            <td>{{ ((count*100)/langCountTotal)|round(2, 'floor') }}%</td>
+                            <td>{{ ((count*100)/countTotalEuropeana)|round(2, 'floor') }}%</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript_sub %}
+    {{ parent() }}
+{% endblock %}

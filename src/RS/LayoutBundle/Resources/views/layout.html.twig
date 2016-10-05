@@ -44,8 +44,9 @@
                 <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" href="{{ path('rs_home_home_index') }}" id="home-logo">
-                <span class="navbar-brand" style=""><h1 style="margin-top: -15px;">{% block h1 %}{% endblock %}</h1></span>
+                <img src="{{ asset('images/logo.png') }}" alt="Europeana" style="max-height: 39px; max-width:100px; margin-top: -9px; display: inline;" />
             </a>
+            <span class="navbar-brand" style=""><h1 style="margin-top: 0px;">{% block h1 %}{% endblock %}</h1></span>
         </div>
         <div class="collapse navbar-collapse">
             {# if is_granted("IS_AUTHENTICATED_REMEMBERED") %}

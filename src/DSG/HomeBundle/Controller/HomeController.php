@@ -7,6 +7,7 @@ use DSG\ModelBundle\Form\EuropeanaItemsSessionType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use DSG\HomeBundle\Service\CsvResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class HomeController extends Controller
 {
@@ -25,26 +26,6 @@ class HomeController extends Controller
 
             return $this->redirect($this->generateUrl('dsg_home_home_wait', array('europeanaItemsSession_id' => $europeanaItemsSession->getId())));
 
-        } else {
-            foreach($em->getRepository('DSGModelBundle:EuropeanaItemsSession')->findBy(array('sentConfirmation' => false)) as $europeanaItemsSession)
-            {
-                if(count($em->getRepository('DSGModelBundle:EuropeanaItem')->findBy(array('europeanaItemsSession' => $europeanaItemsSession))) >= ($europeanaItemsSession->getNumberOfItems()-1))
-                {
-                    $message = \Swift_Message::newInstance()
-                        ->setSubject('Your dataset is ready!')
-                        ->setFrom('cliches@karl-pineau.fr')
-                        ->setTo($europeanaItemsSession->getEmail())
-                        ->setBody('Your Europeana dataset is ready. Download it here : http://karlpine.cluster014.ovh.net/europeana/web/dsg/result/'.$europeanaItemsSession->getId().' - Enjoy !')
-                    ;
-
-                    $this->get('mailer')->send($message);
-                    $europeanaItemsSession->setSentConfirmation(true);
-                    $em->persist($europeanaItemsSession);
-                    $em->flush();
-                } else {
-                    return $this->redirectToRoute('dsg_model_dsGenerator_generator', array('europeanaItemsSession_id' => $europeanaItemsSession->getId()));
-                }
-            }
         }
 
         return $this->render('DSGHomeBundle:Home:index.html.twig', array(
@@ -67,13 +48,32 @@ class HomeController extends Controller
 
     public function computeAction($europeanaItemsSession_id)
     {
+        set_time_limit(0);
         $request = Request::createFromGlobals();
         if($request->isXmlHttpRequest()) {
             $em = $this->getDoctrine()->getManager();
             $europeanaItemsSession = $em->getRepository('DSGModelBundle:EuropeanaItemsSession')->findOneById($europeanaItemsSession_id);
             if ($europeanaItemsSession === null) {throw $this->createNotFoundException('EuropeanaItemsSession [id=' . $europeanaItemsSession_id . '] not found.');}
 
-            return $this->redirectToRoute('dsg_model_dsGenerator_generator', array('europeanaItemsSession_id' => $europeanaItemsSession_id));
+            if($europeanaItemsSession->getSentConfirmation() == false) {
+                $response = $this->get('dsg_model.dsgenerator')->generator($europeanaItemsSession);
+
+                if(count($em->getRepository('DSGModelBundle:EuropeanaItem')->findBy(array('europeanaItemsSession' => $europeanaItemsSession))) >= ($europeanaItemsSession->getNumberOfItems()-1))
+                {
+                    $message = \Swift_Message::newInstance()
+                        ->setSubject('Your dataset is ready!')
+                        ->setFrom('cliches@karl-pineau.fr')
+                        ->setTo($europeanaItemsSession->getEmail())
+                        ->setBody('Your Europeana dataset is ready. Download it here : http://karlpine.cluster014.ovh.net/europeana/web/dsg/result/' . $europeanaItemsSession->getId() . ' - Enjoy !');
+
+                    $this->get('mailer')->send($message);
+                    $europeanaItemsSession->setSentConfirmation(true);
+                    $em->persist($europeanaItemsSession);
+                    $em->flush();
+                }
+                return new Response(json_encode($response));
+            } else { return new Response(json_encode(true));}
+
         }
     }
 
@@ -88,6 +88,7 @@ class HomeController extends Controller
         foreach ($europeanaItems as $europeanaItem) {
             array_push($data, [$europeanaItem->getURI()]);
         }
+        shuffle($data); // Create more "random" aspect
 
         $columns = 'uri';
         $response = new CsvResponse($data, 200, explode(', ', $columns));

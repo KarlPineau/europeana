@@ -1,0 +1,33 @@
+<div class="well">
+    <div class="row">
+        <div class="col-md-6">
+            <h3 style="font-size: 1.5em;">{{ loop.index }}: <a href="http://www.europeana.eu/portal/en/record/{{ container.entity.object.about }}.html" {% if container.title is not empty %}title="{{ container.title }}"{% endif %} >{% if container.title is not empty %}{{ container.title|slice(0, 50) }}{% if container.title|length > 50 %}...{% endif %}{% else %}SYSTEM: NO TITLE{% endif %}</a></h3>
+            <div>
+                {% if container.entity.object.aggregations[0].edmIsShownBy is defined %}
+                    <a href="{{ container.entity.object.aggregations[0].edmIsShownBy }}" class="fancybox"><img src="{{ container.entity.object.aggregations[0].edmIsShownBy }}" style="max-width: 200px; max-height: 200px;" /></a>
+                {% else %}
+                    <i class="fa fa-picture-o fa-5x" aria-hidden="true"></i>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div>
+                <dl class="dl-horizontal"><dt>Record response time</dt><dd>{{ container.timeQuery }} sec</dd></dl>
+                <dl class="dl-horizontal"><dt>MLT Response time</dt><dd>{{ container.timeRelatedItems }} sec</dd></dl>
+                <dl class="dl-horizontal"><dt>MLT Results</dt><dd>{{ container.relatedItems.totalResults }}</dd></dl>
+            </div>
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        {% if container.relatedItems.items is defined %}
+            {% for relatedItem in container.relatedItems.items %}
+                {% if loop.index < 5 %}
+                    {% include 'RSHomeBundle:DataSet:Recommender/recommender-similaritem.html.twig' %}
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-danger">No detected related items</div>
+        {% endif %}
+    </div>
+</div>

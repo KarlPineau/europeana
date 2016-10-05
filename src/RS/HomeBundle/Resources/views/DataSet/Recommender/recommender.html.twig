@@ -1,0 +1,40 @@
+{% extends "RSLayoutBundle::layout-fluid.html.twig" %}
+
+{% block title %}Europeana recommender system{% endblock %}
+
+{% block h1 %}Europeana recommender system{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="well">
+                <h3>Parameters:</h3>
+                <dl class="dl-horizontal"><dt>isDcSubject</dt><dd>{% if recommenderParameter.isDcSubject == true %}Yes{% else %}No{% endif %}</dd></dl>
+                <dl class="dl-horizontal"><dt>isDcType</dt><dd>{% if recommenderParameter.isDcType == true %}Yes{% else %}No{% endif %}</dd></dl>
+                <dl class="dl-horizontal"><dt>isDcCreator</dt><dd>{% if recommenderParameter.isDcCreator == true %}Yes{% else %}No{% endif %}</dd></dl>
+                <dl class="dl-horizontal"><dt>isDcContributor</dt><dd>{% if recommenderParameter.isDcContributor == true %}Yes{% else %}No{% endif %}</dd></dl>
+                <dl class="dl-horizontal"><dt>isTitle</dt><dd>{% if recommenderParameter.isTitle == true %}Yes{% else %}No{% endif %}</dd></dl>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+        {% for container in entities %}
+            {% if loop.index is not divisibleby(2) %}
+                {% include 'RSHomeBundle:DataSet:Recommender/recommender-item.html.twig' %}
+            {% endif %}
+        {% endfor %}
+        </div>
+        <div class="col-md-6">
+        {% for container in entities %}
+            {% if loop.index is divisibleby(2) %}
+                {% include 'RSHomeBundle:DataSet:Recommender/recommender-item.html.twig' %}
+            {% endif %}
+        {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript_sub %}
+    {{ parent() }}
+{% endblock %}

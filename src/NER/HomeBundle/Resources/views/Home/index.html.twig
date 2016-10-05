@@ -9,10 +9,29 @@
         <div class="col-sm-12">
             <div class="jumbotron">
                 <div class="row">
-                    <h2 class="text-center">Hello world!</h2>
-                    <p><a href="{{ path('ner_home_europeanaItem_index') }}">EuropeanaItems list</a></p>
+                    <h2 class="text-center"><a href="{{ path('ner_administration_home_home') }}">New request</a></h2>
                 </div>
             </div>
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Link</th>
+                        <th>Selected fields</th>
+                        <th>Entities</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for uploadFile in uploadFiles %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td><a href="{{ path('ner_home_home_view', {'uploadFile_id': uploadFile.id}) }}">Access to view</a></td>
+                            <td>{% if uploadFile.fields != null %}{{ uploadFile.fields }}{% else %}All{% endif %}</td>
+                            <td>{{ ner_model_nameentityrecognition_service.countEntitiesByUploadFile(uploadFile) }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
 {% endblock %}
