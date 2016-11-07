@@ -6,14 +6,10 @@ use DSG\HomeBundle\Service\CsvResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
-class CurrentController extends Controller
+class CurrentLanguageController extends Controller
 {
-    /*
-     * AIM of this controller:
-     * RETURN THE LIST OF PARAMETERS FOR FURTHER SEARCH, COMPUTED FROM THE REFERENCE ITEM(S)
-     */
-
     // http://sol1.eanadev.org:9191/solr/search/minimlt?wt=json&mlt=true <- USING AT MLTFiddle
     // https://cwiki.apache.org/confluence/display/solr/MoreLikeThis <- doc
     public function queryAction(Request $request)
@@ -29,29 +25,19 @@ class CurrentController extends Controller
 
             $returnList = $this->query($urlFile);
 
-            $dateTime = new \DateTime();
-            $timestamp = $dateTime->getTimestamp();
-            $fs = new \Symfony\Component\Filesystem\Filesystem();
-            $fs->mkdir('../../web/data/'.$timestamp);
-
-            $date = date('Y-m-d-h-i-s');
             $response = new CsvResponse($returnList, 200, ['europeana_id', 'dcType', 'dcSubject', 'dcCreator', 'title', 'dataProvider']);
-            $response->setFilename($timestamp.'-'.$date.'-parametersOf1000.csv');
-            $fs->copy($response, '../../web/'.$timestamp.'/'.$timestamp.'-'.$date.'-parametersOf1000.csv');
-            $fs->copy('../../src/RS/AdministrationBundle/Controller/CurrentController.php', '../../web/'.$timestamp.'/CurrentController.php');
-
+            $response->setFilename("parametersOf1000.csv");
             return $response;
         }
 
-        $this->get('session')->getFlashBag()->add('notice', 'Step 1: use data.csv' );
-        return $this->render('RSAdministrationBundle:Query:query.html.twig', array(
-            'form' => $form->createView(),
-            'next' => 'rs_administration_sic_query'));
+        $this->get('session')->getFlashBag()->add('notice', 'use data.csv' );
+        return $this->render('DSGAdministrationBundle:BabelNetDataSet:query.html.twig', array('form' => $form->createView()));
     }
 
     protected function query($urlFile)
     {
         set_time_limit(0);
+        $em = $this->getDoctrine()->getManager();
         $returnList = array();
 
         $row = 1;
@@ -64,20 +50,23 @@ class CurrentController extends Controller
                     $content = $this->queryEuropeana($data[$c])[0];
                     if(isset($content->response->docs)) {
                         foreach ($content->response->docs as $doc) {
-                            if(isset($doc->{'proxy_edm_type'})) {$dcType = $doc->{'proxy_edm_type'};}
-                            elseif(isset($doc->{'proxy_dc_type.def'})) {$dcType = $doc->{'proxy_dc_type.def'};}
+                            if(isset($doc->{'proxy_dc_type.'.$doc->europeana_aggregation_edm_language[0]})) {$dcType = $doc->{'proxy_dc_type.'.$doc->europeana_aggregation_edm_language[0]};}
                             elseif(isset($doc->{'proxy_dc_type.en'})) {$dcType = $doc->{'proxy_dc_type.en'};}
+                            elseif(isset($doc->{'proxy_dc_type.def'})) {$dcType = $doc->{'proxy_dc_type.def'};}
+                            elseif(isset($doc->{'proxy_edm_type'})) {$dcType = $doc->{'proxy_edm_type'};}
                             else { $dcType = null;}
 
-                            if(isset($doc->proxy_dc_subject)) {$dcSubject = $doc->proxy_dc_subject;}
-                            elseif(isset($doc->{'proxy_dc_subject.def'})) {$dcSubject = $doc->{'proxy_dc_subject.def'};}
+                            if(isset($doc->{'proxy_dc_subject.'.$doc->europeana_aggregation_edm_language[0]})) {$dcSubject = $doc->{'proxy_dc_subject.'.$doc->europeana_aggregation_edm_language[0]};}
                             elseif(isset($doc->{'proxy_dc_subject.en'})) {$dcSubject = $doc->{'proxy_dc_subject.en'};}
+                            elseif(isset($doc->{'proxy_dc_subject.def'})) {$dcSubject = $doc->{'proxy_dc_subject.def'};}
+                            elseif(isset($doc->proxy_dc_subject)) {$dcSubject = $doc->proxy_dc_subject;}
                             elseif(isset($doc->proxy_edm_subject)) {$dcSubject = $doc->proxy_edm_subject;}
                             elseif(isset($doc->subject)) {$dcSubject = $doc->subject;}
                             else { $dcSubject = null;}
 
-                            if(isset($doc->{'proxy_dc_creator.def'})) {$dcCreator = $doc->{'proxy_dc_creator.def'};}
+                            if(isset($doc->{'proxy_dc_creator.'.$doc->europeana_aggregation_edm_language[0]})) {$dcCreator = $doc->{'proxy_dc_creator.'.$doc->europeana_aggregation_edm_language[0]};}
                             elseif(isset($doc->{'proxy_dc_creator.en'})) {$dcCreator = $doc->{'proxy_dc_creator.en'};}
+                            elseif(isset($doc->{'proxy_dc_creator.def'})) {$dcCreator = $doc->{'proxy_dc_creator.def'};}
                             elseif(isset($doc->proxy_dc_creator)) {$dcCreator = $doc->proxy_dc_creator;}
                             elseif(isset($doc->CREATOR)) {$dcCreator = $doc->CREATOR;}
                             else { $dcCreator = null;}
@@ -100,7 +89,8 @@ class CurrentController extends Controller
 
     public function queryEuropeana($query)
     {
-         set_time_limit(0);
+        //http://sol1.eanadev.org:9191/solr/search_1_shard1_replica2/select?q=*&qf=LANGUAGE:fr&fl=europeana_id&rows=300000&cursorMark=*&wt=json&start=0&sort=europeana_id asc
+        set_time_limit(0);
         $this->get('Buzz')->getClient()->setTimeout(0);
 
         $timestart=microtime(true);

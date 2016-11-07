@@ -2,9 +2,17 @@ rs_administration_current_query:
     path:     /current/query
     defaults: { _controller: RSAdministrationBundle:Current:query }
 
-rs_administration_sr_query:
-    path:     /sr/query
-    defaults: { _controller: RSAdministrationBundle:SR:query }
+rs_administration_currentlanguage_query:
+    path:     /current-language/query
+    defaults: { _controller: RSAdministrationBundle:CurrentLanguage:query }
+
+rs_administration_currentenglish_query:
+    path:     /current-english/query
+    defaults: { _controller: RSAdministrationBundle:CurrentEnglish:query }
+
+rs_administration_sic_query:
+    path:     /sic/query
+    defaults: { _controller: RSAdministrationBundle:SimilarItemsComputing:query }
 
 rs_administration_test_test:
     path:     /test/test
@@ -12,9 +20,21 @@ rs_administration_test_test:
 
 rs_administration_statistics_query:
     path:     /statistics/query
-    defaults: { _controller: RSAdministrationBundle:Statistics:query }
+    defaults: { _controller: RSAdministrationBundle:StatisticsQuery:query }
 
-rs_administration_statistics_view:
-    path:     /statistics/view
-    defaults: { _controller: RSAdministrationBundle:Statistics:view }
+rs_administration_count_query:
+    path:     /count/query
+    defaults: { _controller: RSAdministrationBundle:Count:query }
+
+rs_administration_viewcount_query:
+    path:     /view-count/query
+    defaults: { _controller: RSAdministrationBundle:ViewCount:query }
+
+rs_administration_statistics_index:
+    path:     /statistics
+    defaults: { _controller: RSAdministrationBundle:Statistics:index }
+
+rs_administration_statistics_compare:
+    path:     /statistics/compare
+    defaults: { _controller: RSAdministrationBundle:Statistics:compare }
 

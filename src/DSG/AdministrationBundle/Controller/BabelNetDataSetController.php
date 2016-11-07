@@ -70,7 +70,7 @@ class BabelNetDataSetController extends Controller
 
     public function queryEuropeana($query)
     {
-        //http://sol7.eanadev.org:9191/solr/search/search?q=*&qf=LANGUAGE:fr&fl=europeana_id&rows=300000&cursorMark=*&wt=json&start=0&sort=europeana_id asc
+        //http://sol1.eanadev.org:9191/solr/search_1_shard1_replica2/select?q=*&qf=LANGUAGE:fr&fl=europeana_id&rows=300000&cursorMark=*&wt=json&start=0&sort=europeana_id asc
         set_time_limit(0);
         $this->get('Buzz')->getClient()->setTimeout(0);
 

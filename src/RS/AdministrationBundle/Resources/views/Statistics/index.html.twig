@@ -11,132 +11,183 @@
                 <thead>
                     <tr>
                         <th rowspan="2">#</th>
-                        <th colspan="2"><abbr title="Reference Item">RI</abbr> info</th>
-                        <th rowspan="2">Pourcentage of <abbr title="similar items">SIs</abbr> with same <abbr title="DataSet">DS</abbr> than <abbr title="Reference Item">RI</abbr></th>
-                        <th colspan="2">Composition of <abbr title="similar items">SIs</abbr> in <abbr title="DataSet">DS</abbr></th>
-                        <th colspan="5">Is that same <abbr title="DataSet">DS</abbr> than <abbr title="Reference Item">RI</abbr> ?</th>
+                        <th rowspan="2">Ref. Item</th>
+                        <th rowspan="2">NumFound</th>
+                        <th rowspan="2">Similar Items</th>
+                        <th colspan="2">Dataset</th>
+                        <th colspan="2">Language</th>
+                        <th colspan="2">Country</th>
                     </tr>
                     <tr>
-                        <th>Item</th>
-                        <th>Dataset</th>
-                        <th>diff <abbr title="DataSet">DS</abbr> > nb of <abbr title="DataSet">DS</abbr></th>
+                        <th>Nb ≠</th>
                         <th>List</th>
-                        <th>#1</th>
-                        <th>#2</th>
-                        <th>#3</th>
-                        <th>#4</th>
-                        <th>#5</th>
+                        <th>Nb ≠</th>
+                        <th>List</th>
+                        <th>Nb ≠</th>
+                        <th>List</th>
                     </tr>
                 </thead>
                 <tbody>
-                {% set totalSimilarPourcentage = 0 %}
-                {% set totalList = 0 %}
-                {% set similarCount = 0 %}
-                {% set items1 = 0 %}
-                {% set items2 = 0 %}
-                {% set items3 = 0 %}
-                {% set items4 = 0 %}
-                {% set items5 = 0 %}
+                {% set totalListDataset = 0 %}
+                {% set totalListLanguage = 0 %}
+                {% set totalListCountry = 0 %}
+                {% set totalNumFound = 0 %}
+                {% set countIndex = 1 %}
+
+                {% set datasetSimilarityCountTotal = 0 %}
+                {% set languageSimilarityCountTotal = 0 %}
+                {% set countrySimilarityCountTotal = 0 %}
+
+                {% set totalSI = 0 %}
+
+                {% set datasetPourcentageCount = 0 %}
+                {% set languagePourcentageCount = 0 %}
+                {% set countryPourcentageCount = 0 %}
 
                 {% for itemInfos in returnList %}
                     {% set containerItem = itemInfos['containerItem'] %}
                     {% set item = containerItem['europeana_id'] %}
                     {% set dataset = containerItem['edm_datasetName'] %}
+                    {% set language = containerItem['europeana_aggregation_edm_language'] %}
+                    {% set country = containerItem['europeana_aggregation_edm_country'] %}
                     {% set thumbnail = containerItem['provider_aggregation_edm_isShownBy'] %}
 
-                    {% set similarItems = itemInfos['similarItems'] %}
+                    {% set datasetSimilarityCount = 0 %}
+                    {% set languageSimilarityCount = 0 %}
+                    {% set countrySimilarityCount = 0 %}
 
-                    {% set similarPourcentage = 0 %}
-                    {% for containerSimilarItem in similarItems %}
-                        {% if containerSimilarItem['edm_datasetName'] == dataset %}{% set similarPourcentage = similarPourcentage+1 %}{% endif %}
-                    {% endfor %}
-                    {% set totalSimilarPourcentage = totalSimilarPourcentage+similarPourcentage %}
-                    {% set similarCount = similarCount+(similarItems|length) %}
-
-                    {% set listArray = [] %}
-                    {% for containerSimilarItem in similarItems %}
-                        {% if containerSimilarItem['edm_datasetName'] not in listArray %}
-                            {% set listArray = listArray|merge([containerSimilarItem['edm_datasetName']]) %}
+                    {% set listDataset = [] %}
+                    {% for containerSimilarItem in itemInfos['similarItems'] %}
+                        {% if containerSimilarItem['edm_datasetName'] not in listDataset %}
+                            {% set listDataset = listDataset|merge([containerSimilarItem['edm_datasetName']]) %}
                         {% endif %}
                     {% endfor %}
-                    {% set totalList = totalList+(listArray|length) %}
+                    {% set totalListDataset = totalListDataset+(listDataset|length) %}
 
-                    <tr>
-                        <td>{{ loop.index }}</td>
-                        <td>
-                            <a href="http://www.europeana.eu/portal/en/record{{ item }}.html" target="_blank">{{ item|slice(1, 20) }}{% if item|length > 20 %}...{% endif %}</a>
-                            {% if thumbnail != null and profile == 'rich' %}
-                                <br />
-                                <img src="{{ thumbnail }}" class="thumbnail" style="max-height: 100px; max-width: 100px;" />
+                    {% set listLanguage = [] %}
+                    {% for containerSimilarItem in itemInfos['similarItems'] %}
+                        {% if containerSimilarItem['europeana_aggregation_edm_language'] not in listLanguage %}
+                            {% set listLanguage = listLanguage|merge([containerSimilarItem['europeana_aggregation_edm_language']]) %}
+                        {% endif %}
+                    {% endfor %}
+                    {% set totalListLanguage = totalListLanguage+(listLanguage|length) %}
+
+                    {% set listCountry = [] %}
+                    {% for containerSimilarItem in itemInfos['similarItems'] %}
+                        {% if containerSimilarItem['europeana_aggregation_edm_country'] not in listCountry %}
+                            {% set listCountry = listCountry|merge([containerSimilarItem['europeana_aggregation_edm_country']]) %}
+                        {% endif %}
+                    {% endfor %}
+                    {% set totalListCountry = totalListCountry+(listCountry|length) %}
+
+                    {% set totalSI = totalSI+(itemInfos['similarItems']|length) %}
+
+                    {% for containerSimilarItem in itemInfos['similarItems'] %}
+                        <tr>
+                            {% if loop.index == 1 %}
+                            <td rowspan="{{ (itemInfos['similarItems']|length)+1 }}">{{ countIndex }}{% set countIndex = countIndex+1 %}</td>
+                            <td rowspan="{{ (itemInfos['similarItems']|length)+1 }}">
+                                <div><strong><a href="http://www.europeana.eu/portal/en/record{{ item }}.html" target="_blank">{{ item|slice(0, 20) }}{% if item|length > 20 %}...{% endif %}</a></strong></div>
+                                <div><a href="http://www.europeana.eu/portal/en/search?q=edm_datasetName%3A%22{{ dataset }}%22" target="_blank" title="{{ dataset }}">{{ dataset|slice(0, 20) }}{% if dataset|length > 20 %}...{% endif %}</a></div>
+                                {% if thumbnail != null and profile == 'rich' %}
+                                    <div><img src="{{ thumbnail }}" class="thumbnail" style="max-height: 100px; max-width: 100px;" /></div>
+                                {% endif %}
+                            </td>
+                            <td rowspan="{{ (itemInfos['similarItems']|length)+1 }}">{{ itemInfos['numFound'] }}{% set totalNumFound = totalNumFound+itemInfos['numFound'] %}</td>
                             {% endif %}
-                        </td>
-                        <td><span title="{{ dataset }}">{{ dataset|slice(1, 20) }}{% if dataset|length > 20 %}...{% endif %}</span></td>
-                        <td>{% if similarItems|length > 0 %}{{ ((similarPourcentage*100)/(similarItems|length))|round(2, 'floor') }}%{% endif %}</td>
-                        <td>{{ listArray|length }} -> {{ similarItems|length }}</td>
-                        <td>
-                            <ul class="list-unstyled">
-                            {% for containerSimilarItem in similarItems %}
-                                <li>
-                                    <a href="http://www.europeana.eu/portal/en/record{{ containerSimilarItem['europeana_id'] }}.html" target="_blank" title="{{ containerSimilarItem['edm_datasetName'] }}">{{ containerSimilarItem['edm_datasetName']|slice(1, 20) }}{% if containerSimilarItem['edm_datasetName']|length > 20 %}...{% endif %}</a>
-                                    {% if containerSimilarItem['provider_aggregation_edm_isShownBy'] != null and profile == 'rich' %}
-                                        <br />
-                                        <img src="{{ containerSimilarItem['provider_aggregation_edm_isShownBy'] }}" class="thumbnail" style="max-height: 100px; max-width: 100px;" />
-                                    {% endif %}
-                                </li>
-                            {% else %}
-                                <li>No Item</li>
-                            {% endfor %}
-                            </ul>
-                        </td>
-                        <td>
-                            {% if similarItems[0] is defined %}
-                                {% if similarItems[0]['edm_datasetName'] == dataset %}<span class="text-primary">Yes</span>{% set items1 = items1+1 %}{% else %}<span class="text-warning">No</span>{% endif %}
-                            {% else %}
-                                <span class="text-danger">Undef.</span>
+                            <td>
+                                <div><a href="http://www.europeana.eu/portal/en/record{{ containerSimilarItem['europeana_id'] }}.html" target="_blank" title="{{ containerSimilarItem['europeana_id'] }}">{{ containerSimilarItem['europeana_id']|slice(0, 20) }}{% if containerSimilarItem['europeana_id']|length > 20 %}...{% endif %}</a></div>
+                                {% if containerSimilarItem['provider_aggregation_edm_isShownBy'] != null and profile == 'rich' %}
+                                    <div><img src="{{ containerSimilarItem['provider_aggregation_edm_isShownBy'] }}" class="thumbnail" style="max-height: 100px; max-width: 100px;" /></div>
+                                {% endif %}
+                            </td>
+                            {% if loop.index == 1 %}
+                                <td rowspan="{{ (itemInfos['similarItems']|length)+1 }}">{{ listDataset|length }}</td>
                             {% endif %}
-                        </td>
-                        <td>
-                            {% if similarItems[1] is defined %}
-                                {% if similarItems[1]['edm_datasetName'] == dataset %}<span class="text-primary">Yes</span>{% set items2 = items2+1 %}{% else %}<span class="text-warning">No</span>{% endif %}
-                            {% else %}
-                                <span class="text-danger">Undef.</span>
+                            <td>
+                                {% if containerSimilarItem['edm_datasetName'] == dataset %}
+                                    <span class="text-primary">Yes</span>
+                                    {% set datasetSimilarityCount = datasetSimilarityCount+1 %}
+                                    {% set datasetSimilarityCountTotal = datasetSimilarityCountTotal+1 %}
+                                {% else %}<span class="text-warning">No</span>
+                                {% endif %}
+                            </td>
+                            {% if loop.index == 1 %}
+                                <td rowspan="{{ (itemInfos['similarItems']|length)+1 }}">{{ listLanguage|length }}</td>
                             {% endif %}
-                        </td>
-                        <td>
-                            {% if similarItems[2] is defined %}
-                                {% if similarItems[2]['edm_datasetName'] == dataset %}<span class="text-primary">Yes</span>{% set items3 = items3+1 %}{% else %}<span class="text-warning">No</span>{% endif %}
-                            {% else %}
-                                <span class="text-danger">Undef.</span>
+                            <td>
+                                {% if containerSimilarItem['europeana_aggregation_edm_language'] == language %}
+                                    <span class="text-primary">Yes</span>
+                                    {% set languageSimilarityCount = languageSimilarityCount+1 %}
+                                    {% set languageSimilarityCountTotal = languageSimilarityCountTotal+1 %}
+                                {% else %}<span class="text-warning">No</span>
+                                {% endif %}
+                            </td>
+                            {% if loop.index == 1 %}
+                                <td rowspan="{{ (itemInfos['similarItems']|length)+1 }}">{{ listCountry|length }}</td>
                             {% endif %}
-                        </td>
-                        <td>
-                            {% if similarItems[3] is defined %}
-                                {% if similarItems[3]['edm_datasetName'] == dataset %}<span class="text-primary">Yes</span>{% set items4 = items4+1 %}{% else %}<span class="text-warning">No</span>{% endif %}
-                            {% else %}
-                                <span class="text-danger">Undef.</span>
-                            {% endif %}
-                        </td>
-                        <td>
-                            {% if similarItems[4] is defined %}
-                                {% if similarItems[4]['edm_datasetName'] == dataset %}<span class="text-primary">Yes</span>{% set items5 = items5+1 %}{% else %}<span class="text-warning">No</span>{% endif %}
-                            {% else %}
-                                <span class="text-danger">Undef.</span>
-                            {% endif %}
-                        </td>
-                    </tr>
+                            <td>
+                                {% if containerSimilarItem['europeana_aggregation_edm_country'] == country %}
+                                    <span class="text-primary">Yes</span>
+                                    {% set countrySimilarityCount = countrySimilarityCount+1 %}
+                                    {% set countrySimilarityCountTotal = countrySimilarityCountTotal+1 %}
+                                {% else %}<span class="text-warning">No</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr class="warning">
+                            <td rowspan="2">{{ loop.index }}</td>
+                            <td rowspan="2">
+                                <div><strong><a href="http://www.europeana.eu/portal/en/record{{ item }}.html" target="_blank">{{ item|slice(0, 20) }}{% if item|length > 20 %}...{% endif %}</a></strong></div>
+                                <div><a href="http://www.europeana.eu/portal/en/search?q=edm_datasetName%3A%22{{ dataset }}%22" target="_blank" title="{{ dataset }}">{{ dataset|slice(0, 20) }}{% if dataset|length > 20 %}...{% endif %}</a></div>
+                                {% if thumbnail != null and profile == 'rich' %}
+                                    <div><img src="{{ thumbnail }}" class="thumbnail" style="max-height: 100px; max-width: 100px;" /></div>
+                                {% endif %}
+                            </td>
+                            <td rowspan="2">0</td>
+                            <td><strong>No items</strong></td>
+                            <td colspan="2"><span class="text-danger">ND</span></td>
+                            <td colspan="2"><span class="text-danger">ND</span></td>
+                            <td colspan="2"><span class="text-danger">ND</span></td>
+                        </tr>
+                    {% endfor %}
+                        <tr>
+                            <th>{{ itemInfos['similarItems']|length }} similar items</th>
+                            <th colspan="2">
+                                {% if itemInfos['similarItems']|length > 0 %}
+                                    {{ ((datasetSimilarityCount*100)/(itemInfos['similarItems']|length))|round(2, 'floor') }}%
+                                    {% set datasetPourcentageCount = datasetPourcentageCount+((datasetSimilarityCount*100)/(itemInfos['similarItems']|length)) %}
+                                {% else %}No data
+                                {% endif %}
+                            </th>
+                            <th colspan="2">
+                                {% if itemInfos['similarItems']|length > 0 %}
+                                    {{ ((languageSimilarityCount*100)/(itemInfos['similarItems']|length))|round(2, 'floor') }}%
+                                    {% set languagePourcentageCount = languagePourcentageCount+((languageSimilarityCount*100)/(itemInfos['similarItems']|length)) %}
+                                {% else %}No data
+                                {% endif %}
+                            </th>
+                            <th colspan="2">
+                                {% if itemInfos['similarItems']|length > 0 %}
+                                    {{ ((countrySimilarityCount*100)/(itemInfos['similarItems']|length))|round(2, 'floor') }}%
+                                    {% set countryPourcentageCount = countryPourcentageCount+((countrySimilarityCount*100)/(itemInfos['similarItems']|length)) %}
+                                {% else %}No data
+                                {% endif %}
+                            </th>
+                        </tr>
                 {% endfor %}
                     <tr>
                         <th>#</th>
-                        <th>TOTAL</th>
-                        <th></th>
-                        <th>Average: {{ ((totalSimilarPourcentage*100)/(similarCount))|round(2, 'floor') }}%</th>
-                        <th>Nb of DS<br />Average: {{ (totalList/(returnList|length))|round(2, 'floor') }}</th>
-                        <th></th>
-                        <th>{{ ((items1*100)/(returnList|length))|round(2, 'floor') }}%</th>
-                        <th>{{ ((items2*100)/(returnList|length))|round(2, 'floor') }}%</th>
-                        <th>{{ ((items3*100)/(returnList|length))|round(2, 'floor') }}%</th>
-                        <th>{{ ((items4*100)/(returnList|length))|round(2, 'floor') }}%</th>
-                        <th>{{ ((items5*100)/(returnList|length))|round(2, 'floor') }}%</th>
+                        <th>AVERAGE</th>
+                        <th>{{ (totalNumFound/(returnList|length))|round(2, 'floor') }} Res per RI</th>
+                        <th>{{ (totalSI/(returnList|length))|round(2, 'floor') }} SI per RI</th>
+                        <th>{{ ((totalListDataset)/(returnList|length))|round(2, 'floor') }} DS per RI</th>
+                        <th>{{ ((datasetSimilarityCountTotal*100)/totalSI)|round(2, 'floor') }}%</th>
+                        <th>{{ ((totalListLanguage)/(returnList|length))|round(2, 'floor') }} La per RI</th>
+                        <th>{{ ((languageSimilarityCountTotal*100)/totalSI)|round(2, 'floor') }}%</th>
+                        <th>{{ ((totalListCountry)/(returnList|length))|round(2, 'floor') }} Co per RI</th>
+                        <th>{{ ((countrySimilarityCountTotal*100)/totalSI)|round(2, 'floor') }}%</th>
                     </tr>
                 </tbody>
             </table>

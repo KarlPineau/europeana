@@ -1,0 +1,66 @@
+{% extends "RSLayoutBundle::layout-fluid.html.twig" %}
+
+{% block title %}Statistics about similar items{% endblock %}
+
+{% block h1 %}Statistics about similar items{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-xs-12">
+            <table class="table table-condensed table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Ref. Item</th>
+                        <th>Original metadata language</th>
+                        <th>English NumFound</th>
+                        <th>Original metadata language NumFound</th>
+                        <th>Difference</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% set totalNumFoundEnglish = 0 %}
+                {% set totalNumFoundNatural = 0 %}
+                {% set totalNumFoundDiff = 0 %}
+                {% set totalNumFoundAverage = 0 %}
+
+                {% for itemInfos in returnList %}
+                    {% set containerItem = itemInfos['containerItem'] %}
+                    {% set item = containerItem['europeana_id'] %}
+                    {% set dataset = containerItem['edm_datasetName'] %}
+                    {% set thumbnail = containerItem['provider_aggregation_edm_isShownBy'] %}
+
+                    <tr {% if (itemInfos['numFoundEnglish']-itemInfos['numFoundNatural']) != 0 %}class="warning"{% endif %}>
+                        <td>{{ loop.index }}</td>
+                        <td>
+                            <div><strong><a href="http://www.europeana.eu/portal/en/record{{ item }}.html" target="_blank">{{ item|slice(0, 20) }}{% if item|length > 20 %}...{% endif %}</a></strong></div>
+                            <div><a href="http://www.europeana.eu/portal/en/search?q=edm_datasetName%3A%22{{ dataset }}%22" target="_blank" title="{{ dataset }}">{{ dataset|slice(0, 20) }}{% if dataset|length > 20 %}...{% endif %}</a></div>
+                            {% if thumbnail != null and profile == 'rich' %}
+                                <div><img src="{{ thumbnail }}" class="thumbnail" style="max-height: 100px; max-width: 100px;" /></div>
+                            {% endif %}
+                        </td>
+                        <td>{{ containerItem['europeana_aggregation_edm_language'] }}</td>
+                        <td>{{ itemInfos['numFoundEnglish']|number_format(2, '.', ',') }}{% set totalNumFoundEnglish = totalNumFoundEnglish+itemInfos['numFoundEnglish'] %}</td>
+                        <td>{{ itemInfos['numFoundNatural']|number_format(2, '.', ',') }}{% set totalNumFoundNatural = totalNumFoundNatural+itemInfos['numFoundNatural'] %}</td>
+                        <td>{{ (itemInfos['numFoundEnglish']-itemInfos['numFoundNatural'])|number_format(2, '.', ',') }}{% if (itemInfos['numFoundEnglish']-itemInfos['numFoundNatural']) > 0 %}{% set totalNumFoundDiff = totalNumFoundDiff+1 %}{% set totalNumFoundAverage = totalNumFoundAverage+(itemInfos['numFoundEnglish']-itemInfos['numFoundNatural']) %}{% endif %}</td>
+                    </tr>
+
+                {% endfor %}
+                    <tr>
+                        <th>#</th>
+                        <th>AVERAGE</th>
+                        <th></th>
+                        <th>{{ (totalNumFoundEnglish/(returnList|length))|round(2, 'floor')|number_format(2, '.', ',') }} Res English per RI</th>
+                        <th>{{ (totalNumFoundNatural/(returnList|length))|round(2, 'floor')|number_format(2, '.', ',') }} Res Original metadata language per RI</th>
+                        <th>Number of items where number of results is not the same: {{ totalNumFoundDiff }}<br />
+                            Average of difference of number of results: {{ (totalNumFoundAverage/(totalNumFoundDiff))|round(2, 'floor')|number_format(2, '.', ',') }} </th>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript_sub %}
+    {{ parent() }}
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends "DSGAdministrationBundle::layout.html.twig" %}
+
+{% block title %}Europeana - DataSet Generator{% endblock %}
+
+{% block h1 %}Europeana - DataSet Generator{% endblock %}
+
+{% block content %}
+    {{ dump(cursor) }}
+{% endblock %}
+
+{% block javascript_sub %}
+    {{ parent() }}
+{% endblock %}

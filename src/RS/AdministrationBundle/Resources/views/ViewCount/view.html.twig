@@ -1,0 +1,50 @@
+{% extends "RSLayoutBundle::layout-fluid.html.twig" %}
+
+{% block title %}View Count{% endblock %}
+
+{% block h1 %}View Count{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-xs-12">
+            <table class="table table-condensed table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Query</th>
+                        <th>Item</th>
+                        <th>Count</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% set totalCount = 0 %}
+                {% for containerItem in returnList %}
+                    {% set item = containerItem['europeana_id'] %}
+                    {% set query = containerItem['query'] %}
+                    {% set count = containerItem['count'] %}
+                    {% set totalCount = totalCount+count %}
+
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td><span title="{{ query }}">{{ query|slice(0, 20) }}{% if query|length > 20 %}...{% endif %}</span></td>
+                        <td>
+                            <a href="http://www.europeana.eu/portal/en/record{{ item }}.html" target="_blank">{{ item|slice(0, 20) }}{% if item|length > 20 %}...{% endif %}</a>
+                        </td>
+                        <td>{{ count|number_format }}</td>
+                    </tr>
+                {% endfor %}
+                    <tr>
+                        <th>#</th>
+                        <th colspan="2">TOTAL</th>
+                        <th>
+                        </th>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript_sub %}
+    {{ parent() }}
+{% endblock %}

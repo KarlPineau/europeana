@@ -84,12 +84,12 @@ class DSGenerator
 
     public function queryEuropeana($query, $queryFacet=null, $fl=null, $cursor='*')
     {
-        //http://sol7.eanadev.org:9191/solr/search/search?q=*&qf=LANGUAGE:fr&fl=europeana_id&rows=300000&cursorMark=*&wt=json&start=0&sort=europeana_id asc
+        //http://sol1.eanadev.org:9191/solr/search_1_shard1_replica2/select?q=*&qf=LANGUAGE:fr&fl=europeana_id&rows=300000&cursorMark=*&wt=json&start=0&sort=europeana_id asc
         set_time_limit(0);
         $this->buzz->getClient()->setTimeout(0);
 
         $timestart=microtime(true);
-        $query = 'http://sol7.eanadev.org:9191/solr/search/search?q='.urlencode($query);
+        $query = 'http://sol1.eanadev.org:9191/solr/search_1_shard1_replica2/select?q='.urlencode($query);
         if($queryFacet != null) {$query .= '&fq='.urlencode($queryFacet);}
         if($fl == null) {$query .= '&fl=europeana_id';}
         $query .= '&cursorMark='.urlencode($cursor).'&rows=150000&wt=json&start=0&sort='.urlencode('europeana_id asc');
@@ -104,12 +104,12 @@ class DSGenerator
 
     public function queryCountEuropeana($query, $queryFacet)
     {
-        //http://sol7.eanadev.org:9191/solr/search/search?q=*&qf=LANGUAGE:fr&fl=europeana_id&wt=json&start=0&sort=europeana_id asc
+        //http://sol1.eanadev.org:9191/solr/search_1_shard1_replica2/select?q=*&qf=LANGUAGE:fr&fl=europeana_id&wt=json&start=0&sort=europeana_id asc
         set_time_limit(0);
         $this->buzz->getClient()->setTimeout(0);
 
         $timestart=microtime(true);
-        $query = 'http://sol7.eanadev.org:9191/solr/search/search?q='.urlencode($query);
+        $query = 'http://sol1.eanadev.org:9191/solr/search_1_shard1_replica2/select?q='.urlencode($query);
         if($queryFacet != null) {$query .= '&fq='.urlencode($queryFacet);}
         $query .= '&fl=europeana_id&wt=json&rows=1&start=0&sort='.urlencode('europeana_id asc');
         $queryResponse = $this->buzz->get($query);

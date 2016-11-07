@@ -189,7 +189,7 @@ class EuropeanaAssessmentController extends Controller
     protected function statisticsDataset()
     {
         //http://www.europeana.eu/api/v2/search.json?wskey=api2demo&query=*&profile=facets&facet=edm_datasetName&f.edm_datasetName.facet.limit=200000&rows=0
-        $response = json_decode($this->get('Buzz')->get('http://sol7.eanadev.org:9191/solr/search/search?q=*%3A*&wt=json&rows=0&indent=true&facet=true&facet.field=edm_datasetName&f.edm_datasetName.facet.limit=200000')->getContent());
+        $response = json_decode($this->get('Buzz')->get('http://sol1.eanadev.org:9191/solr/search_1_shard1_replica2/select?q=*%3A*&wt=json&rows=0&indent=true&facet=true&facet.field=edm_datasetName&f.edm_datasetName.facet.limit=200000')->getContent());
         $datasets = $response->facet_counts->facet_fields->edm_datasetName;
         $countTotalEuropeana = $response->response->numFound;
 
@@ -217,12 +217,12 @@ class EuropeanaAssessmentController extends Controller
         $list = array();
         foreach($statisticsDataset[1] as $dataset => $count)
         {
-            $rows = round(($count*1000)/$statisticsDataset[0]);
+            $rows = round(($count*2000)/$statisticsDataset[0]);
 
             if($rows > 0) {
-                $list[] = ['http://sol7.eanadev.org:9191/solr/search/search?q=edm_datasetName:'.urlencode($dataset).'&fl=europeana_id&rows='.$rows.'&wt=json&start=0&sort='.urlencode('europeana_id asc')];
-            } elseif( $count > 10000) {
-                $list[] = ['http://sol7.eanadev.org:9191/solr/search/search?q=edm_datasetName:'.urlencode($dataset).'&fl=europeana_id&rows=1&wt=json&start=0&sort='.urlencode('europeana_id asc')];
+                $list[] = ['http://sol1.eanadev.org:9191/solr/search_1_shard1_replica2/select?q=edm_datasetName:'.urlencode($dataset).'&fl=europeana_id&rows='.$rows.'&wt=json&start=0&sort='.urlencode('europeana_id asc')];
+            } elseif( $count > 5000) {
+                $list[] = ['http://sol1.eanadev.org:9191/solr/search_1_shard1_replica2/select?q=edm_datasetName:'.urlencode($dataset).'&fl=europeana_id&rows=1&wt=json&start=0&sort='.urlencode('europeana_id asc')];
             }
         }
 

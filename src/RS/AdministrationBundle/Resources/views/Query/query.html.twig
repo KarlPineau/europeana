@@ -1,12 +1,17 @@
 {% extends "RSAdministrationBundle::layout.html.twig" %}
 
-{% block title %}BabelNet{% endblock %}
+{% block title %}Recommender system{% endblock %}
 
-{% block h1 %}BabelNet{% endblock %}
+{% block h1 %}Recommender system{% endblock %}
 
 {% block content %}
     <div class="row">
         <div class="col-sm-offset-3 col-sm-6">
+            {% for flashMessage in app.session.flashbag.get('notice') %}
+                <div class="alert alert-success">
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
             <div class="well">
                 <form class="form-horizontal" method="post" role="form">
                     {% if not form.vars.valid %}
@@ -30,6 +35,10 @@
                     {{ form_rest(form) }}
                     <div class="text-center"><input type="submit" class="btn btn-default" /></div>
                 </form>
+            </div>
+            <div class="text-center">
+                {% if previous is defined %}<a href="{{ path(previous) }}">Previous step</a> <i class="fa fa-arrow-left" aria-hidden="true"></i>{% endif %}
+                {% if next is defined %}<i class="fa fa-arrow-right" aria-hidden="true"></i> <a href="{{ path(next) }}">Next step</a>{% endif %}
             </div>
         </div>
     </div>

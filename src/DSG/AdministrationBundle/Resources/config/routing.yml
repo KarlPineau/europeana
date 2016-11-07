@@ -2,9 +2,9 @@ dsg_administration_home_index:
     path:     /
     defaults: { _controller: DSGAdministrationBundle:Home:index }
 
-dsg_administration_home_test:
-    path:     /test
-    defaults: { _controller: DSGAdministrationBundle:Home:test }
+#dsg_administration_home_test:
+#    path:     /test
+#    defaults: { _controller: DSGAdministrationBundle:Home:test }
 
 # Europeana Assessment
 dsg_administration_babelnetdataset_statisticsLang:
@@ -35,3 +35,8 @@ dsg_administration_babelnetdataset_process:
 dsg_administration_babelnetdataset_query:
     path:     /babelnet/query
     defaults: { _controller: DSGAdministrationBundle:BabelNetDataSet:query }
+
+
+dsg_administration_test_index:
+    path:     /test
+    defaults: { _controller: DSGAdministrationBundle:Test:index }

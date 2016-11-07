@@ -7,6 +7,11 @@
 {% block content %}
     <div class="row">
         <div class="col-sm-offset-3 col-sm-6">
+            {% for flashMessage in app.session.flashbag.get('notice') %}
+                <div class="alert alert-success">
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
             <div class="well">
                 <form class="form-horizontal" method="post" role="form">
                     {% if not form.vars.valid %}

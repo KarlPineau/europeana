@@ -14,7 +14,7 @@ class TestController extends Controller
     public function testAction()
     {
         set_time_limit(0);
-        $query = $this->get('Buzz')->get('http://sol7.eanadev.org:9191/solr/search/search?q=napoleon&wt=json');
+        $query = $this->get('Buzz')->get('http://sol1.eanadev.org:9191/solr/search_1_shard1_replica2/select?q=napoleon&wt=json');
         $response = json_decode($query->getContent())->response->numFound;
 
         return new Response(json_encode($response));
