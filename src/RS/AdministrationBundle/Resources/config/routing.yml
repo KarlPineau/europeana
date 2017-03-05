@@ -14,6 +14,10 @@ rs_administration_sic_query:
     path:     /sic/query
     defaults: { _controller: RSAdministrationBundle:SimilarItemsComputing:query }
 
+rs_administration_score_query:
+    path:     /score/query
+    defaults: { _controller: RSAdministrationBundle:ScoreComputing:query }
+
 rs_administration_test_test:
     path:     /test/test
     defaults: { _controller: RSAdministrationBundle:Test:query }
@@ -37,4 +41,16 @@ rs_administration_statistics_index:
 rs_administration_statistics_compare:
     path:     /statistics/compare
     defaults: { _controller: RSAdministrationBundle:Statistics:compare }
+
+rs_administration_algorithmexperiment_generate:
+    path:     /algorithmexperiment/generate
+    defaults: { _controller: RSAdministrationBundle:AlgorithmExperiment:generateJson }
+
+#Get Tier (Europeana Publishing Framework) for one record
+rs_administration_tier_getTier:
+    path:     /tier/get/{europeana_id}
+    defaults: { _controller: RSAdministrationBundle:Tier:getTier }
+    requirements:
+        europeana_id: \S{0,255}
+
 

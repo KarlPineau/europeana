@@ -32,13 +32,13 @@ class CurrentController extends Controller
             $dateTime = new \DateTime();
             $timestamp = $dateTime->getTimestamp();
             $fs = new \Symfony\Component\Filesystem\Filesystem();
-            $fs->mkdir('../../web/data/'.$timestamp);
+            $fs->mkdir('data/'.$timestamp);
 
             $date = date('Y-m-d-h-i-s');
-            $response = new CsvResponse($returnList, 200, ['europeana_id', 'dcType', 'dcSubject', 'dcCreator', 'title', 'dataProvider']);
+            $response = new CsvResponse($returnList, 200, ['europeana_id', 'dcType', 'dcSubject', 'dcCreator', 'title', 'dataProvider', 'when', 'where']);
             $response->setFilename($timestamp.'-'.$date.'-parametersOf1000.csv');
-            $fs->copy($response, '../../web/'.$timestamp.'/'.$timestamp.'-'.$date.'-parametersOf1000.csv');
-            $fs->copy('../../src/RS/AdministrationBundle/Controller/CurrentController.php', '../../web/'.$timestamp.'/CurrentController.php');
+            $fs->dumpFile('data/'.$timestamp.'/'.$timestamp.'-'.$date.'-parametersOf1000.csv', $response);
+            $fs->copy('../src/RS/AdministrationBundle/Controller/CurrentController.php', 'data/'.$timestamp.'/CurrentController.php');
 
             return $response;
         }
@@ -56,7 +56,7 @@ class CurrentController extends Controller
 
         $row = 1;
         if (($handle = fopen($urlFile, "r")) !== FALSE) {
-            while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+            while (($data = fgetcsv($handle, 0, ",")) !== FALSE) {
                 $num = count($data);
                 $row++;
                 for ($c=0; $c < $num; $c++) {
@@ -86,7 +86,11 @@ class CurrentController extends Controller
 
                             if(isset($doc->provider_aggregation_edm_dataProvider)) {$dataProvider = $doc->provider_aggregation_edm_dataProvider[0];} else { $dataProvider = null;}
 
-                            $returnList[] = [urlencode($data[$c]), urlencode(json_encode($dcType)), urlencode(json_encode($dcSubject)), urlencode(json_encode($dcCreator)), urlencode($title), urlencode($dataProvider)];
+                            if(isset($doc->YEAR)) {$when = $doc->YEAR;} else { $when = null;}
+
+                            if(isset($doc->proxy_dcterms_spatial)) {$where = $doc->proxy_dcterms_spatial;} else { $where = null;}
+
+                            $returnList[] = [urlencode($data[$c]), urlencode(json_encode($dcType)), urlencode(json_encode($dcSubject)), urlencode(json_encode($dcCreator)), urlencode($title), urlencode($dataProvider), urlencode(json_encode($when)), urlencode(json_encode($where))];
                         }
                     }
                 }

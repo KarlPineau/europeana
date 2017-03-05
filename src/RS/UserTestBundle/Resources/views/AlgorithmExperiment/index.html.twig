@@ -1,0 +1,232 @@
+{% extends "RSUserTestBundle::layout.html.twig" %}
+
+{% block title %}AlgorithmExperiment{% endblock %}
+
+{% block h1 %}AlgorithmExperiment{% endblock %}
+
+{% block navbar_right %}
+    <li><a class="navbar-brand" href="#">1/10</a></li>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-xs-12">
+            {% for flashMessage in app.session.flashbag.get('notice') %}
+                <div class="alert alert-success">
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12 col-sm-3">
+            <div data-spy="affix" style="width: 263px;" >
+                <input type="hidden" value="{{ item['containerItem']['europeana_id'] }}" id="idRI"/>
+                <div class="list-group">
+                    <a id="riTitle" href="http://www.europeana.eu/portal/en/record{{ item['containerItem']['europeana_id'] }}.html" class="list-group-item active" target="_blank" >__TITLE__</a>
+                    <div class="list-group-item text-center">
+                        {% if item['containerItem']['provider_aggregation_edm_isShownBy'] != null %}
+                            <a href="{{ item['containerItem']['provider_aggregation_edm_isShownBy'] }}" class="fancybox"><img src="{{ item['containerItem']['provider_aggregation_edm_isShownBy'] }}" class="image-cliches" /></a>
+                        {% else %}
+                            <i class="fa fa-5x fa-picture-o" aria-hidden="true"></i>
+                        {% endif %}
+                    </div>
+                    <div class="list-group-item">
+                        <dl>
+                            <dt>Description</dt>
+                            <dd id="riDesc">__DESCRIPTION__</dd>
+                        </dl>
+                    </div>
+                    <div class="list-group-item">
+                        <dl>
+                            <dt>Classifications</dt>
+                            <dd>__CLASSIFICATIONS__</dd>
+                        </dl>
+                    </div>
+                    <div class="list-group-item">
+                        <dl>
+                            <dt>Time</dt>
+                            <dd>__TIME__</dd>
+                        </dl>
+                    </div>
+                    <div class="list-group-item">
+                        <dl>
+                            <dt>Provenance</dt>
+                            <dd>__PROVENANCE__</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-9">
+            {% for similarItem in item["similarItems"] %}
+            <div class="row">
+                <div class="col-xs-12 col-sm-6">
+                    <div class="list-group">
+                        <a href="http://www.europeana.eu/portal/en/record{{ similarItem['europeana_id'] }}.html" class="list-group-item active" target="_blank" >__TITLE__</a>
+                        <div class="list-group-item text-center">
+                            {% if similarItem['provider_aggregation_edm_isShownBy'] != null %}
+                                <a href="{{ similarItem['provider_aggregation_edm_isShownBy'] }}" class="fancybox" ><img src="{{ similarItem['provider_aggregation_edm_isShownBy'] }}" class="image-cliches-list-micro" /></a>
+                            {% else %}
+                                <i class="fa fa-5x fa-picture-o" aria-hidden="true"></i>
+                            {% endif %}
+                        </div>
+                        <div class="list-group-item">
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-6">
+                                    <dl>
+                                        <dt>Description</dt>
+                                        <dd>__DESCRIPTION__</dd>
+                                    </dl>
+                                </div>
+                                <div class="col-xs-12 col-sm-6">
+                                    <dl>
+                                        <dt>Classifications</dt>
+                                        <dd>__CLASSIFICATIONS__</dd>
+                                    </dl>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="list-group-item">
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-6">
+                                    <dl>
+                                        <dt>Time</dt>
+                                        <dd>__TIME__</dd>
+                                    </dl>
+                                </div>
+                                <div class="col-xs-12 col-sm-6">
+                                    <dl>
+                                        <dt>Provenance</dt>
+                                        <dd>__PROVENANCE__</dd>
+                                    </dl>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-md-6">
+                    <form class="form-horizontal userTestForm">
+                        <div class="form-group">
+                            <label class="control-label col-xs-12 col-sm-6">Do you think this item is relevant ?</label>
+                            <div class="col-xs-12 col-sm-6 no-weight">
+                                <div class="radio-inline">
+                                    <label>
+                                        <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1">
+                                        Yes
+                                    </label>
+                                </div>
+                                <div class="radio-inline">
+                                    <label>
+                                        <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                                        Maybe
+                                    </label>
+                                </div>
+                                <div class="radio-inline">
+                                    <label>
+                                        <input type="radio" name="optionsRadios" id="optionsRadios3" value="option3">
+                                        No
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-12 col-sm-6">Are you interested by this item ?</label>
+                            <div class="col-xs-12 col-sm-6 no-weight">
+                                <div class="radio-inline">
+                                    <label>
+                                        <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1">
+                                        Yes
+                                    </label>
+                                </div>
+                                <div class="radio-inline">
+                                    <label>
+                                        <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                                        Maybe
+                                    </label>
+                                </div>
+                                <div class="radio-inline">
+                                    <label>
+                                        <input type="radio" name="optionsRadios" id="optionsRadios3" value="option3">
+                                        No
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-12 col-sm-6">Can you tell us if this item is visually similar ?</label>
+                            <div class="col-xs-12 col-sm-6 no-weight">
+                                <div class="radio-inline">
+                                    <label>
+                                        <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1">
+                                        Yes
+                                    </label>
+                                </div>
+                                <div class="radio-inline">
+                                    <label>
+                                        <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                                        Maybe
+                                    </label>
+                                </div>
+                                <div class="radio-inline">
+                                    <label>
+                                        <input type="radio" name="optionsRadios" id="optionsRadios3" value="option3">
+                                        No
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-12 col-sm-6">Do you think this item is more similar than the next one ?</label>
+                            <div class="col-xs-12 col-sm-6 no-weight">
+                                <div class="radio-inline">
+                                    <label>
+                                        <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1">
+                                        Yes
+                                    </label>
+                                </div>
+                                <div class="radio-inline">
+                                    <label>
+                                        <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                                        Maybe
+                                    </label>
+                                </div>
+                                <div class="radio-inline">
+                                    <label>
+                                        <input type="radio" name="optionsRadios" id="optionsRadios3" value="option3">
+                                        No
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    {{ dump(item) }}
+{% endblock %}
+
+{% block javascript_sub %}
+    {{ parent() }}
+    <script>
+        $( document ).ready(function() {
+            $.ajax({
+                dataType: "json",
+                url: 'http://www.europeana.eu/api/v2/record'+$('#idRI').val()+'.json?wskey=api2demo',
+                success: function (data) {
+                    console.log(data);
+                    var item = data.object
+                    $('#riTitle').text(item.title[0]);
+                    $('#riDesc').text($(item).children().find('proxies').first().children().find('dcDescription').children().first().children().first())
+                },
+                error: function (error) {
+                    console.log(dump(error));
+                }
+            });
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends "RSUserTestBundle::layout.html.twig" %}
+
+{% block title %}Recommender system{% endblock %}
+
+{% block h1 %}Recommender system{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-xs-12">
+            {% for flashMessage in app.session.flashbag.get('notice') %}
+                <div class="alert alert-success">
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+
+            <div class="jumbotron text-center">
+                <h2>Hi ! Thanks to help us to improve recommendations on Europeana.eu</h2>
+
+                <p class="lead">
+                    The purpose of this interface is the evaluation of our content recommendations.<br />
+                    This experiment will take around 10 minutes.<br />
+                    Please, do click on the following button to start.<br />
+                    <span class="text-primary">Thanks again. <i class="fa fa-smile-o" aria-hidden="true"></i></span><br />
+                    <br />
+                    <a href="{{ path('rs_usertest_algorithmexperiment_index') }}" class="btn btn-lg btn-primary"><i class="fa fa-play" aria-hidden="true"></i> Start</a>
+                </p>
+            </div>
+        </div>
+    </div>
+    <a href="{{ path('rs_administration_algorithmexperiment_generate') }}">generate list items</a>
+{% endblock %}
+
+{% block javascript_sub %}
+    {{ parent() }}
+{% endblock %}

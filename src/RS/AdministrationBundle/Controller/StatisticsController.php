@@ -3,10 +3,33 @@
 namespace RS\AdministrationBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\Extension\Core\Type\UrlType;
+use Symfony\Component\HttpFoundation\Request;
 
 class StatisticsController extends Controller
 {
-    public function indexAction()
+    public function indexAction(Request $request)
+    {
+        set_time_limit(0);
+        $form = $this->createFormBuilder()
+            ->add('urlFile', UrlType::class,  array('mapped' => false, 'required' => true))
+            ->getForm();
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $urlFile = $form->get('urlFile')->getData();
+
+            $timestamp = strstr(basename($urlFile), '-', true);
+            return $this->loadAction('data/'.$timestamp.'/'.basename($urlFile));
+        }
+
+        $this->get('session')->getFlashBag()->add('notice', 'Step 5: use similarItems-top5of1000.json' );
+        return $this->render('RSAdministrationBundle:Query:query.html.twig', array(
+            'form' => $form->createView(),
+            'previous' => 'rs_administration_statistics_query'));
+    }
+
+    public function loadAction($path)
     {
         if(!isset($_GET['profile']) OR empty($_GET['profile'])) {
             $profile = 'light';
@@ -14,7 +37,6 @@ class StatisticsController extends Controller
             $profile = $_GET['profile'];
         }
 
-        $path = $this->get('kernel')->getRootDir() . '../../web/data/similarItems-top5Of1000-current.json';
         $content = file_get_contents($path);
         $json = json_decode($content, true);
 
@@ -30,11 +52,11 @@ class StatisticsController extends Controller
             $profile = $_GET['profile'];
         }
 
-        $pathEnglish = $this->get('kernel')->getRootDir() . '../../web/data/similarItems-top5Of1000-current-english.json';
+        $pathEnglish = '../web/data/similarItems-top5Of1000-current-english.json';
         $contentEnglish = file_get_contents($pathEnglish);
         $jsonEnglish = json_decode($contentEnglish, true);
 
-        $pathNatural = $this->get('kernel')->getRootDir() . '../../web/data/similarItems-top5Of1000-current-natural.json';
+        $pathNatural = '../web/data/similarItems-top5Of1000-current-natural.json';
         $contentNatural = file_get_contents($pathNatural);
         $jsonNatural = json_decode($contentNatural, true);
 

@@ -40,3 +40,12 @@ dsg_administration_babelnetdataset_query:
 dsg_administration_test_index:
     path:     /test
     defaults: { _controller: DSGAdministrationBundle:Test:index }
+
+
+dsg_administration_infoondataset_query:
+    path:     /infoOnDataSet/query
+    defaults: { _controller: DSGAdministrationBundle:InfoOnDataset:query }
+
+dsg_administration_datasetinfo_query:
+    path:     /dataset/Info/query
+    defaults: { _controller: DSGAdministrationBundle:DatasetInfo:query }

@@ -40,6 +40,8 @@
 
                 {% set totalSI = 0 %}
 
+                {% set arrayTotalNumFound = [] %}
+
                 {% set datasetPourcentageCount = 0 %}
                 {% set languagePourcentageCount = 0 %}
                 {% set countryPourcentageCount = 0 %}
@@ -93,7 +95,7 @@
                                     <div><img src="{{ thumbnail }}" class="thumbnail" style="max-height: 100px; max-width: 100px;" /></div>
                                 {% endif %}
                             </td>
-                            <td rowspan="{{ (itemInfos['similarItems']|length)+1 }}">{{ itemInfos['numFound'] }}{% set totalNumFound = totalNumFound+itemInfos['numFound'] %}</td>
+                            <td rowspan="{{ (itemInfos['similarItems']|length)+1 }}">{{ itemInfos['numFound'] }}{% set totalNumFound = totalNumFound+itemInfos['numFound'] %}{% set arrayTotalNumFound = arrayTotalNumFound|merge({ (loop.index0): itemInfos['numFound']}) %}</td>
                             {% endif %}
                             <td>
                                 <div><a href="http://www.europeana.eu/portal/en/record{{ containerSimilarItem['europeana_id'] }}.html" target="_blank" title="{{ containerSimilarItem['europeana_id'] }}">{{ containerSimilarItem['europeana_id']|slice(0, 20) }}{% if containerSimilarItem['europeana_id']|length > 20 %}...{% endif %}</a></div>
@@ -177,10 +179,12 @@
                             </th>
                         </tr>
                 {% endfor %}
+                    {% set arrayTotalNumFound = arrayTotalNumFound|sort %}
                     <tr>
                         <th>#</th>
                         <th>AVERAGE</th>
-                        <th>{{ (totalNumFound/(returnList|length))|round(2, 'floor') }} Res per RI</th>
+                        <th>{{ (totalNumFound/(returnList|length))|round(2, 'floor') }} Res per RI<br />
+                            {{ arrayTotalNumFound[((arrayTotalNumFound|length)+1)/2] }}</th>
                         <th>{{ (totalSI/(returnList|length))|round(2, 'floor') }} SI per RI</th>
                         <th>{{ ((totalListDataset)/(returnList|length))|round(2, 'floor') }} DS per RI</th>
                         <th>{{ ((datasetSimilarityCountTotal*100)/totalSI)|round(2, 'floor') }}%</th>

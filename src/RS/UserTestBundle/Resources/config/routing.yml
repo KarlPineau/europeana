@@ -1,0 +1,7 @@
+rs_usertest_home_index:
+    path:     /
+    defaults: { _controller: RSUserTestBundle:Home:index }
+
+rs_usertest_algorithmexperiment_index:
+    path:     /algorithm-experiment
+    defaults: { _controller: RSUserTestBundle:AlgorithmExperiment:index }

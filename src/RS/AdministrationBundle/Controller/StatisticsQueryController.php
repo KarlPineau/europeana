@@ -6,6 +6,7 @@ use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class StatisticsQueryController extends Controller
 {
@@ -27,18 +28,22 @@ class StatisticsQueryController extends Controller
 
             $timestamp = strstr(basename($urlFile), '-', true);
             $returnList = $this->query($urlFile, $timestamp);
-            $this->register($returnList, $timestamp);
+            $fileURL = $this->register($returnList, $timestamp);
 
             $fs = new \Symfony\Component\Filesystem\Filesystem();
-            $fs->copy('../../src/RS/AdministrationBundle/Controller/StatisticsQueryController.php', '../../web/'.$timestamp.'/StatisticsQueryController.php');
+            $fs->copy('../src/RS/AdministrationBundle/Controller/StatisticsQueryController.php', 'data/'.$timestamp.'/StatisticsQueryController.php');
 
-            return $this->redirectToRoute('rs_administration_statistics_index');
+            $headers = array(
+                'Content-Type'     => 'application/json',
+                'Content-Disposition' => 'inline; filename="'.$fileURL.'"');
+            return new Response(readfile($fileURL), 200, $headers);
         }
 
-        $this->get('session')->getFlashBag()->add('notice', 'Step 3: use top5relatedItems.csv' );
+        $this->get('session')->getFlashBag()->add('notice', 'Step 4: use top5relatedItems.csv' );
         return $this->render('RSAdministrationBundle:Query:query.html.twig', array(
             'form' => $form->createView(),
-            'previous' => 'rs_administration_sic_query'));
+            'previous' => 'rs_administration_score_query',
+            'next' => 'rs_administration_statistics_index'));
     }
 
     protected function query($urlFile, $timestamp)
@@ -49,36 +54,39 @@ class StatisticsQueryController extends Controller
 
         $row = 1;
         if (($handle = fopen($urlFile, "r")) !== FALSE) {
-            while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+            while (($data = fgetcsv($handle, 0, ",")) !== FALSE) {
                 $row++;
                 if(isset($data[1])) {
                     $values = array();
+
                     foreach ($data as $key => $entity) {
                         /*
                          * KEY value :
                          * 0 = query
                          * 1 = referenceItem
-                         * 2 = item1
-                         * 3 = item2
-                         * 4 = item3
-                         * 5 = item4
-                         * 6=  item5
-                         * 7=  numFound
+                         * 2 = numFound
+                         * 3 = item1
+                         * 4 = item2
+                         * 5 = item3
+                         * 6=  item4
+                         * 7=  item5
                          */
 
-                        if ($key > 1) {
-                            $queryReturned = $this->queryEuropeana($entity, $date, $timestamp);
-                            $values[] = [
-                                'europeana_id' => $entity,
-                                'edm_datasetName' => $queryReturned['edm_datasetName'],
-                                'europeana_aggregation_edm_language' => $queryReturned['europeana_aggregation_edm_language'],
-                                'europeana_aggregation_edm_country' => $queryReturned['europeana_aggregation_edm_country'],
-                                'provider_aggregation_edm_isShownBy' => $queryReturned['provider_aggregation_edm_isShownBy']
-                            ];
+
+                        if ($key > 2) {
+                                $queryReturned = $this->queryEuropeana($entity, $date, $timestamp);
+                                $values[] = [
+                                    'europeana_id' => $entity,
+                                    'edm_datasetName' => $queryReturned['edm_datasetName'],
+                                    'europeana_aggregation_edm_language' => $queryReturned['europeana_aggregation_edm_language'],
+                                    'europeana_aggregation_edm_country' => $queryReturned['europeana_aggregation_edm_country'],
+                                    'provider_aggregation_edm_isShownBy' => $queryReturned['provider_aggregation_edm_isShownBy'],
+
+                                ];
                         }
                     }
 
-                    if(isset($data[7])) {$numFound = $data[7];} else {$numFound = 0;}
+                    if(isset($data[2])) {$numFound = $data[2];} else {$numFound = 0;}
                     $queryReturned = $this->queryEuropeana(urldecode($data[1]), $date, $timestamp);
                     $returnList[] = [
                         'containerItem' => [
@@ -89,7 +97,7 @@ class StatisticsQueryController extends Controller
                             'provider_aggregation_edm_isShownBy' => $queryReturned['provider_aggregation_edm_isShownBy']
                         ],
                         'similarItems' => $values,
-                        'numFound' => $numFound
+                        'numFound' => intval($numFound)
                     ];
                 }
             }
@@ -112,11 +120,13 @@ class StatisticsQueryController extends Controller
 
         if (isset($responseContainer->response)) {
             /* LOGGING */
-            $path = $this->get('kernel')->getRootDir() . '../../web/data/'.$timestamp.'/'.$timestamp.'-'.$date.'-logs-stat.text';
-            $content = file_get_contents($path);
-            $content .= json_encode($responseContainer->response)."\n";
             $fs = new \Symfony\Component\Filesystem\Filesystem();
-            try {$fs->dumpFile('data/'.$timestamp.'/'.$timestamp.'-'.$date.'logs-stat.text', $content);}
+            if(!$fs->exists('data/'.$timestamp.'/'.$timestamp.'-'.$date.'-logs-stat.text')) {
+                $fs->dumpFile('data/'.$timestamp.'/'.$timestamp.'-'.$date.'-logs-stat.text', '');
+            }
+            $content = file_get_contents('data/'.$timestamp.'/'.$timestamp.'-'.$date.'-logs-stat.text');
+            $content .= json_encode($responseContainer->response)."\n";
+            try {$fs->dumpFile('data/'.$timestamp.'/'.$timestamp.'-'.$date.'-logs-stat.text', $content);}
             catch(IOException $e) {}
             /* -- END LOGGING */
 
@@ -149,6 +159,7 @@ class StatisticsQueryController extends Controller
 
         try {
             $fs->dumpFile('data/'.$timestamp.'/'.$timestamp.'-'.date('Y-m-d-h-i-s').'-similarItems-top5of1000.json', json_encode($returnList));
+            return 'data/'.$timestamp.'/'.$timestamp.'-'.date('Y-m-d-h-i-s').'-similarItems-top5of1000.json';
         }
         catch(IOException $e) {}
     }

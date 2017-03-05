@@ -1,0 +1,31 @@
+bot_home_browse_index:
+    path:     /browse/{type}.json
+    defaults: { _controller: BOTHomeBundle:Browse:index }
+    requirements:
+        type: \S{0,20}
+
+bot_home_similarItems_index:
+    path:     /similarItems/{europeana_id_first}/{europeana_id_second}
+    defaults: { _controller: BOTHomeBundle:SimilarItems:index }
+    requirements:
+        europeana_id_first: \S{0,250}
+        europeana_id_second: \S{0,250}
+
+bot_home_query_index:
+    path:     /query/{query}
+    defaults: { _controller: BOTHomeBundle:Query:index }
+    requirements:
+        query: \S{0,500}
+
+bot_home_game_index:
+    path:     /game.json
+    defaults: { _controller: BOTHomeBundle:Game:index }
+
+bot_home_game_check:
+    path:     /game/check/{value}/{field}/{europeana_id_first}/{europeana_id_second}
+    defaults: { _controller: BOTHomeBundle:Game:check }
+    requirements:
+        value: "[a-zA-Z0-9]+"
+        field: country|year
+        europeana_id_first: \S{0,250}
+        europeana_id_second: \S{0,250}
